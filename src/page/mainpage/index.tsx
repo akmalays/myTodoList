@@ -3,7 +3,9 @@ import { Grid, Typography } from "@mui/material";
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
 import SvgIcon from "../../components/icon";
-import RoundedButton from "../../components/rounded_button";
+import Navbar from "../../components/navbar";
+import Titlebar from "../../components/titlebar";
+import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {
   const todoListData = [
@@ -16,53 +18,11 @@ export default function MainPage() {
   return (
     <div>
       {/* navbar section */}
-      <Grid container sx={{ backgroundColor: "#16ABF8", height: 105 }}>
-        <Grid
-          item
-          sx={{
-            display: "flex",
-            justifyItems: "flex-start",
-            alignItems: "center",
-            ml: "15%",
-          }}
-        >
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              fontSize: 24,
-              color: "#ffffff",
-            }}
-          >
-            TO DO LIST APP
-          </Typography>
-        </Grid>
-      </Grid>
+      <Navbar />
       {/* title section */}
-
-      <Grid
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mx: "15%",
-          mt: 5,
-        }}
-      >
-        <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
-          Activity
-        </Typography>
-        <RoundedButton />
-      </Grid>
+      <Titlebar />
       {/* main content */}
-
-      <Grid
-        sx={{
-          pt: 5,
-          pb: 10,
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <Grid sx={styles.mainContentContainer}>
         <Grid
           container
           sx={{
@@ -80,13 +40,13 @@ export default function MainPage() {
                     backgroundColor: "#ffffff",
                     width: 235,
                     height: 235,
-                    boxShadow: 3,
-                    borderRadius: "5px",
+                    boxShadow: 5,
+                    borderRadius: "10px",
                   }}
                   key={todo.id}
                 >
                   <Grid
-                    p={2}
+                    p={3}
                     sx={{
                       display: "flex",
                       flexDirection: "column",
@@ -96,7 +56,7 @@ export default function MainPage() {
                       sx={{
                         fontWeight: "bold",
                         fontSize: 18,
-                        flexBasis: 180,
+                        flexBasis: 170,
                         textTransform: "capitalize",
                       }}
                     >
@@ -105,7 +65,7 @@ export default function MainPage() {
                     <Grid display="flex" justifyContent={"space-between"}>
                       <Typography
                         sx={{
-                          fontWeight: "normal",
+                          fontWeight: "500",
                           fontSize: 14,
                           color: "#888888",
                           textTransform: "capitalize",
@@ -113,7 +73,9 @@ export default function MainPage() {
                       >
                         {todo.time}
                       </Typography>
-                      <SvgIcon icon={trashIcon} height={"20"} width={"20"} />
+                      <Grid sx={{ cursor: "pointer" }}>
+                        <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
