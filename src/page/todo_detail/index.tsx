@@ -1,5 +1,22 @@
-import { Checkbox, Grid, Typography } from "@mui/material";
+import { useState } from "react";
 
+import {
+  Checkbox,
+  Divider,
+  Fade,
+  Grid,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+
+import AzIcon from "../../assets/icons/icon-A-Z.svg";
+import UndoneIcon from "../../assets/icons/icon-belum-selesai.svg";
+import TerbaruIcon from "../../assets/icons/icon-terbaru.svg";
+import TerlamaIcon from "../../assets/icons/icon-terlama.svg";
+import ZaIcon from "../../assets/icons/icon-Z-A.svg";
+import selectedIcon from "../../assets/icons/selected-icon.svg";
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
 import NoTodoImages from "../../assets/images/todo-empty-state.svg";
@@ -18,12 +35,46 @@ const listTodo = [
 ];
 
 export default function TodoDetail() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selected, setSelected] = useState<boolean>(false);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const onClose = () => {
+    setAnchorEl(null);
+  };
+  const sortOlder = () => {
+    setAnchorEl(null);
+    setSelected(true);
+  };
+  const sortNewest = () => {
+    setAnchorEl(null);
+    setSelected(true);
+  };
+  const sortAZ = () => {
+    setAnchorEl(null);
+    setSelected(true);
+  };
+  const sortZA = () => {
+    setAnchorEl(null);
+    setSelected(true);
+  };
+  const sortUndone = () => {
+    setAnchorEl(null);
+    setSelected(true);
+  };
   return (
     <div>
       {/* navbar section */}
       <Navbar />
       {/* title section */}
-      <Titlebar type={"tododetail"} />
+      <Titlebar
+        type={"tododetail"}
+        todo={listTodo.length > 0 ? true : false}
+        handleClick={handleClick}
+      />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
         <Grid container display={"column"} justifyContent={"center"}>
@@ -59,7 +110,7 @@ export default function TodoDetail() {
                       <Typography
                         sx={{
                           fontWeight: "600",
-                          fontSize: 18,
+                          fontSize: 20,
                           textTransform: "capitalize",
                         }}
                       >
@@ -86,6 +137,103 @@ export default function TodoDetail() {
           )}
         </Grid>
       </Grid>
+      {/* dropdown menu */}
+      <Menu
+        id="fade-menu"
+        MenuListProps={{
+          "aria-labelledby": "fade-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={onClose}
+        TransitionComponent={Fade}
+        sx={{ "& .MuiPaper-root": { minWidth: 235 } }}
+      >
+        <MenuItem
+          onClick={sortNewest}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Grid>
+            <ListItemIcon>
+              <SvgIcon icon={TerbaruIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+            Terbaru
+          </Grid>
+          {selected === true && (
+            <ListItemIcon>
+              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={sortOlder}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Grid>
+            <ListItemIcon>
+              <SvgIcon icon={TerlamaIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+            Terlama
+          </Grid>
+          {selected === true && (
+            <ListItemIcon>
+              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={sortAZ}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Grid>
+            <ListItemIcon>
+              <SvgIcon icon={AzIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+            A - Z
+          </Grid>
+          {selected === true && (
+            <ListItemIcon>
+              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={sortZA}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Grid>
+            <ListItemIcon>
+              <SvgIcon icon={ZaIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+            Z - A
+          </Grid>
+          {selected === true && (
+            <ListItemIcon>
+              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={sortUndone}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Grid>
+            <ListItemIcon>
+              <SvgIcon icon={UndoneIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+            Belum Selesai
+          </Grid>
+          {selected === true && (
+            <ListItemIcon>
+              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+      </Menu>
     </div>
   );
 }
