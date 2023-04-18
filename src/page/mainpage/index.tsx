@@ -1,4 +1,6 @@
 import { Grid, Typography } from "@mui/material";
+import RoundedButton from "../../components/rounded_button";
+import NoActivityImages from "../../assets/images/activity-empty-state.svg";
 
 export default function MainPage() {
   return (
@@ -11,7 +13,7 @@ export default function MainPage() {
             display: "flex",
             justifyItems: "flex-start",
             alignItems: "center",
-            ml: "20%",
+            ml: "15%",
           }}
         >
           <Typography
@@ -26,7 +28,38 @@ export default function MainPage() {
         </Grid>
       </Grid>
       {/* title section */}
+
+      <Grid
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mx: "15%",
+          mt: 5,
+        }}
+      >
+        <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
+          Activity
+        </Typography>
+        <RoundedButton />
+      </Grid>
       {/* main content */}
+      <Grid
+        sx={{
+          pt: 5,
+          pb: 10,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          alt="no activity images"
+          src={NoActivityImages}
+          width={"50%"}
+          height={"50%"}
+        />
+      </Grid>
     </div>
   );
 }
