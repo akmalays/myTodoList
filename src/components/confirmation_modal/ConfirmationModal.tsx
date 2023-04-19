@@ -5,17 +5,17 @@ import RoundedButton from "../rounded_button/RoundedButton";
 
 interface ConfirmationModalProps {
   open: boolean;
-  openModal?: (active: boolean) => void;
+  closeModal: () => void;
   title: string;
 }
 export default function ConfirmationModal(props: ConfirmationModalProps) {
-  const { open, openModal, title } = props;
+  const { open, closeModal, title } = props;
 
   return (
     <div>
       <Dialog
         open={open}
-        onClose={openModal}
+        onClose={closeModal}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth
@@ -69,6 +69,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
               color: "#F4F4F4",
               fontColor: "#4A4A4A",
               fontWeight: "600",
+              onClick: closeModal,
             }}
           />
           <RoundedButton

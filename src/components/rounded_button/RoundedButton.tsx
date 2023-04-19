@@ -13,6 +13,7 @@ interface RoundedButtonProps {
     color: string;
     fontColor?: string;
     fontWeight?: string;
+    onClick?: any;
   };
 }
 
@@ -40,7 +41,7 @@ export default function RoundedButton(props: RoundedButtonProps) {
   return (
     <div>
       {roundedButtonProps.type === "no icon" ? (
-        <Button sx={styles.button}>
+        <Button sx={styles.button} onClick={roundedButtonProps.onClick}>
           <Grid sx={{ display: "flex", gap: 1 }}>
             <Typography
               sx={{
@@ -55,7 +56,7 @@ export default function RoundedButton(props: RoundedButtonProps) {
           </Grid>
         </Button>
       ) : (
-        <Button sx={styles.button}>
+        <Button sx={styles.button} onClick={roundedButtonProps.onClick}>
           <Grid sx={{ display: "flex", gap: 1 }}>
             <SvgIcon icon={plusIcon} width={"20px"} height={"20px"} pb={1} />
             <Typography

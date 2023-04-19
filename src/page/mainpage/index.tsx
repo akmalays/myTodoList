@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Typography } from "@mui/material";
+import { Grid, Tooltip, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
@@ -12,6 +13,7 @@ import Titlebar from "../../components/titlebar/Titlebar";
 import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {
+  const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const todoListData = [
     { id: 1, title: "daftar belanja bulanan", time: "5 oktober 2023" },
     { id: 2, title: "paperworks home work", time: "5 oktober 2023" },
@@ -25,6 +27,13 @@ export default function MainPage() {
     navigate(`/todo_detail/${id}`, {
       state: title,
     });
+  };
+
+  const isOpenModalDelete = () => {
+    setOpenModalDelete(true);
+  };
+  const onCloseModalDelete = () => {
+    setOpenModalDelete(false);
   };
 
   return (
@@ -54,10 +63,8 @@ export default function MainPage() {
                     height: 235,
                     boxShadow: 5,
                     borderRadius: "10px",
-                    cursor: "pointer",
                   }}
                   key={todo.id}
-                  onClick={() => toTodoDetail(todo.id, todo.title)}
                 >
                   <Grid
                     p={3}
@@ -66,16 +73,28 @@ export default function MainPage() {
                       flexDirection: "column",
                     }}
                   >
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                        fontSize: 18,
-                        flexBasis: 170,
-                        textTransform: "capitalize",
-                      }}
+                    <Tooltip
+                      title="check todolist detail"
+                      arrow
+                      placement="top"
                     >
-                      {todo.title}
-                    </Typography>
+                      <Typography
+                        onClick={() => toTodoDetail(todo.id, todo.title)}
+                        sx={{
+                          fontWeight: "bold",
+                          fontSize: 18,
+                          flexBasis: 170,
+                          textTransform: "capitalize",
+                          "&:hover": {
+                            color: "#16ABF8",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                          },
+                        }}
+                      >
+                        {todo.title}
+                      </Typography>
+                    </Tooltip>
                     <Grid display="flex" justifyContent={"space-between"}>
                       <Typography
                         sx={{
@@ -87,9 +106,18 @@ export default function MainPage() {
                       >
                         {todo.time}
                       </Typography>
-                      <Grid sx={{ cursor: "pointer" }}>
-                        <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
-                      </Grid>
+                      <Tooltip title="delete activity" arrow placement="top">
+                        <Grid
+                          sx={{ cursor: "pointer", zIndex: 100 }}
+                          onClick={isOpenModalDelete}
+                        >
+                          <SvgIcon
+                            icon={trashIcon}
+                            height={"23"}
+                            width={"23"}
+                          />
+                        </Grid>
+                      </Tooltip>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -105,7 +133,11 @@ export default function MainPage() {
           )}
         </Grid>
         {/* <AlertSnackbar caption={"Activity Berhasil Dihapus"} /> */}
-        {/* <ConfirmationModal open={true} title={`"meeting dengan client"`} /> */}
+        <ConfirmationModal
+          open={openModalDelete}
+          closeModal={onCloseModalDelete}
+          title={`"meeting dengan client"`}
+        />
       </Grid>
     </div>
   );

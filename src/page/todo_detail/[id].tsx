@@ -22,6 +22,7 @@ import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
 import NoTodoImages from "../../assets/images/todo-empty-state.svg";
 import ColoredDot from "../../components/colored_dot/ColoredDot";
+import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
@@ -38,9 +39,16 @@ const listTodo = [
 export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selected, setSelected] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
 
   const { state } = useLocation();
   const open = Boolean(anchorEl);
+  const handleOpenModal = () => {
+    setOpenDelete(true);
+  };
+  const onCloseModal = () => {
+    setOpenDelete(false);
+  };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -123,7 +131,7 @@ export default function TodoDetail() {
                         <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
                       </Grid>
                     </Grid>
-                    <Grid sx={{ cursor: "pointer" }}>
+                    <Grid sx={{ cursor: "pointer" }} onClick={handleOpenModal}>
                       <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
                     </Grid>
                   </Grid>
@@ -237,6 +245,11 @@ export default function TodoDetail() {
           )}
         </MenuItem>
       </Menu>
+      <ConfirmationModal
+        open={openDelete}
+        closeModal={onCloseModal}
+        title={`"meeting dengan client"`}
+      />
     </div>
   );
 }
