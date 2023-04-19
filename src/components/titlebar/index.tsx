@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { Grid, Typography } from "@mui/material";
 
 import sortIcon from "../../assets/icons/tabler_arrows-sort.svg";
@@ -10,10 +12,16 @@ interface TitlebarProps {
   type?: string;
   todo?: boolean;
   handleClick?: any;
+  nameTodo?: string;
 }
 
 export default function Titlebar(props: TitlebarProps) {
-  const { type, todo, handleClick } = props;
+  const { type, todo, handleClick, nameTodo } = props;
+  const navigate = useNavigate();
+  const backToDashboard = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <Grid
@@ -28,11 +36,11 @@ export default function Titlebar(props: TitlebarProps) {
         {type === "tododetail" ? (
           <>
             <Grid sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-              <Grid sx={{ cursor: "pointer" }}>
+              <Grid sx={{ cursor: "pointer" }} onClick={backToDashboard}>
                 <SvgIcon icon={BackIcon} height={"28"} width={"28"} />
               </Grid>
               <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
-                New Activity
+                {nameTodo}
               </Typography>
               <Grid sx={{ cursor: "pointer" }}>
                 <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />

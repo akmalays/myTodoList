@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import {
   Checkbox,
@@ -38,6 +39,7 @@ export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selected, setSelected] = useState<boolean>(false);
 
+  const { state } = useLocation();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -74,6 +76,7 @@ export default function TodoDetail() {
         type={"tododetail"}
         todo={listTodo.length > 0 ? true : false}
         handleClick={handleClick}
+        nameTodo={state as string}
       />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>

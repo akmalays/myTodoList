@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { Grid, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
@@ -15,6 +17,14 @@ export default function MainPage() {
     { id: 4, title: "meditation time", time: "5 oktober 2023" },
     { id: 5, title: "iftar", time: "5 oktober 2023" },
   ];
+
+  const navigate = useNavigate();
+  const toTodoDetail = (id: number, title: string) => {
+    navigate(`/todo_detail/${id}`, {
+      state: title,
+    });
+  };
+
   return (
     <div>
       {/* navbar section */}
@@ -42,8 +52,10 @@ export default function MainPage() {
                     height: 235,
                     boxShadow: 5,
                     borderRadius: "10px",
+                    cursor: "pointer",
                   }}
                   key={todo.id}
+                  onClick={() => toTodoDetail(todo.id, todo.title)}
                 >
                   <Grid
                     p={3}
