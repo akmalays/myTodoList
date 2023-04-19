@@ -1,19 +1,28 @@
+import { useNavigate } from "react-router-dom";
+
 import { Grid, Typography } from "@mui/material";
 
 import sortIcon from "../../assets/icons/tabler_arrows-sort.svg";
 import BackIcon from "../../assets/icons/todo-back-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
-import SvgIcon from "../icon";
-import RoundedButton from "../rounded_button";
+import SvgIcon from "../icon/Icon";
+import RoundedButton from "../rounded_button/RoundedButton";
 
 interface TitlebarProps {
   type?: string;
   todo?: boolean;
   handleClick?: any;
+  handleOpenAddTodo?: any;
+  nameTodo?: string;
 }
 
 export default function Titlebar(props: TitlebarProps) {
-  const { type, todo, handleClick } = props;
+  const { type, todo, handleClick, nameTodo, handleOpenAddTodo } = props;
+  const navigate = useNavigate();
+  const backToDashboard = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <Grid
@@ -28,11 +37,11 @@ export default function Titlebar(props: TitlebarProps) {
         {type === "tododetail" ? (
           <>
             <Grid sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-              <Grid sx={{ cursor: "pointer" }}>
+              <Grid sx={{ cursor: "pointer" }} onClick={backToDashboard}>
                 <SvgIcon icon={BackIcon} height={"28"} width={"28"} />
               </Grid>
               <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
-                New Activity
+                {nameTodo}
               </Typography>
               <Grid sx={{ cursor: "pointer" }}>
                 <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
@@ -57,7 +66,15 @@ export default function Titlebar(props: TitlebarProps) {
                   <SvgIcon icon={sortIcon} height={"24"} width={"24"} />
                 </Grid>
               )}
-              <RoundedButton />
+              <RoundedButton
+                roundedButtonProps={{
+                  height: 54,
+                  width: 159,
+                  title: "Tambah",
+                  color: "#16ABF8",
+                  onClick: handleOpenAddTodo,
+                }}
+              />
             </Grid>
           </>
         ) : (
@@ -65,7 +82,14 @@ export default function Titlebar(props: TitlebarProps) {
             <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
               Activity
             </Typography>
-            <RoundedButton />
+            <RoundedButton
+              roundedButtonProps={{
+                height: 54,
+                width: 159,
+                title: "Tambah",
+                color: "#16ABF8",
+              }}
+            />
           </>
         )}
       </Grid>

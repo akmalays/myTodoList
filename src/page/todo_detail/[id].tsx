@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import {
   Checkbox,
@@ -8,6 +9,7 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -20,10 +22,12 @@ import selectedIcon from "../../assets/icons/selected-icon.svg";
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
 import NoTodoImages from "../../assets/images/todo-empty-state.svg";
-import ColoredDot from "../../components/colored_dot";
-import SvgIcon from "../../components/icon";
-import Navbar from "../../components/navbar";
-import Titlebar from "../../components/titlebar";
+import AddItemModal from "../../components/add_item_modal/AddItemModal";
+import ColoredDot from "../../components/colored_dot/ColoredDot";
+import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
+import SvgIcon from "../../components/icon/Icon";
+import Navbar from "../../components/navbar/Navbar";
+import Titlebar from "../../components/titlebar/Titlebar";
 import { styles } from "../../theme/globalstyles";
 
 const listTodo = [
@@ -36,35 +40,87 @@ const listTodo = [
 
 export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selected, setSelected] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [openAddList, setOpenAddList] = useState<boolean>(false);
+  const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
+    {}
+  );
+  //handle clicked filter
+  const handleClickFilter = (index: number) => () => {
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
+  };
 
+  const { state } = useLocation();
   const open = Boolean(anchorEl);
+  const handleOpenModal = () => {
+    setOpenDelete(true);
+  };
+  const onCloseModal = () => {
+    setOpenDelete(false);
+  };
+  const handleOpenAddList = () => {
+    setOpenAddList(true);
+  };
+  const onCloseListModal = () => {
+    setOpenAddList(false);
+  };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const onClose = () => {
     setAnchorEl(null);
   };
-  const sortOlder = () => {
+  const sortOlder = (index: number) => {
     setAnchorEl(null);
-    setSelected(true);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortNewest = () => {
+  const sortNewest = (index: number) => {
     setAnchorEl(null);
-    setSelected(true);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortAZ = () => {
+  const sortAZ = (index: number) => {
     setAnchorEl(null);
-    setSelected(true);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortZA = () => {
+  const sortZA = (index: number) => {
     setAnchorEl(null);
-    setSelected(true);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortUndone = () => {
+  const sortUndone = (index: number) => {
     setAnchorEl(null);
-    setSelected(true);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
+
+  const filterData = [
+    { id: 1, name: "Terbaru", icon: TerbaruIcon, onClickFunc: sortNewest },
+    { id: 2, name: "Terlama", icon: TerlamaIcon, onClickFunc: sortOlder },
+    { id: 3, name: "A - Z", icon: AzIcon, onClickFunc: sortZA },
+    { id: 4, name: "Z - A", icon: ZaIcon, onClickFunc: sortAZ },
+    {
+      id: 5,
+      name: "Belum Selesai",
+      icon: UndoneIcon,
+      onClickFunc: sortUndone,
+    },
+  ];
   return (
     <div>
       {/* navbar section */}
@@ -74,6 +130,8 @@ export default function TodoDetail() {
         type={"tododetail"}
         todo={listTodo.length > 0 ? true : false}
         handleClick={handleClick}
+        handleOpenAddTodo={handleOpenAddList}
+        nameTodo={state as string}
       />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
@@ -106,7 +164,7 @@ export default function TodoDetail() {
                         sx={{ borderColor: "#4F4F4F", borderWidth: 0.5 }}
                         checked={true}
                       />
-                      <ColoredDot color={"#43C4E3"} size={"9px"} />
+                      <ColoredDot color={"#43C4E3"} size={9} />
                       <Typography
                         sx={{
                           fontWeight: "600",
@@ -120,9 +178,14 @@ export default function TodoDetail() {
                         <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
                       </Grid>
                     </Grid>
-                    <Grid sx={{ cursor: "pointer" }}>
-                      <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
-                    </Grid>
+                    <Tooltip title="delete list" arrow placement="top">
+                      <Grid
+                        sx={{ cursor: "pointer" }}
+                        onClick={handleOpenModal}
+                      >
+                        <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
+                      </Grid>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               );
@@ -149,91 +212,41 @@ export default function TodoDetail() {
         TransitionComponent={Fade}
         sx={{ "& .MuiPaper-root": { minWidth: 235 } }}
       >
-        <MenuItem
-          onClick={sortNewest}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={TerbaruIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Terbaru
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortOlder}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={TerlamaIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Terlama
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortAZ}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={AzIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            A - Z
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortZA}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={ZaIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Z - A
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortUndone}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={UndoneIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Belum Selesai
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
+        {filterData.map((filter, index) => {
+          return (
+            <>
+              <MenuItem
+                onClick={() => filter.onClickFunc(index)}
+                sx={{ display: "flex", justifyContent: "space-between" }}
+                key={filter.id}
+              >
+                <Grid>
+                  <ListItemIcon>
+                    <SvgIcon
+                      icon={filter.icon as string}
+                      height={"20"}
+                      width={"20"}
+                    />
+                  </ListItemIcon>
+                  {filter.name}
+                </Grid>
+                {clickedIndex[index] ? (
+                  <ListItemIcon>
+                    <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+                  </ListItemIcon>
+                ) : null}
+              </MenuItem>
+              <Divider />
+            </>
+          );
+        })}
       </Menu>
+      <ConfirmationModal
+        open={openDelete}
+        closeModal={onCloseModal}
+        title={"meeting dengan client"}
+      />
+      <AddItemModal open={openAddList} closeModal={onCloseListModal} />
     </div>
   );
 }
