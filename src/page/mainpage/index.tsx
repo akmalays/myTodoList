@@ -4,6 +4,7 @@ import { Grid, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
+import AlertSnackbar from "../../components/alert_snackbar";
 import SvgIcon from "../../components/icon";
 import Navbar from "../../components/navbar";
 import Titlebar from "../../components/titlebar";
@@ -102,6 +103,7 @@ export default function MainPage() {
             />
           )}
         </Grid>
+        {/* <AlertSnackbar caption={"Activity Berhasil Dihapus"} /> */}
       </Grid>
     </div>
   );
