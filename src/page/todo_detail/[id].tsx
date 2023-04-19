@@ -42,6 +42,16 @@ export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddList, setOpenAddList] = useState<boolean>(false);
+  const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
+    {}
+  );
+  //handle clicked filter
+  const handleClickFilter = (index: number) => () => {
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
+  };
 
   const { state } = useLocation();
   const open = Boolean(anchorEl);
@@ -63,20 +73,40 @@ export default function TodoDetail() {
   const onClose = () => {
     setAnchorEl(null);
   };
-  const sortOlder = () => {
+  const sortOlder = (index: number) => {
     setAnchorEl(null);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortNewest = () => {
+  const sortNewest = (index: number) => {
     setAnchorEl(null);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortAZ = () => {
+  const sortAZ = (index: number) => {
     setAnchorEl(null);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortZA = () => {
+  const sortZA = (index: number) => {
     setAnchorEl(null);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
-  const sortUndone = () => {
+  const sortUndone = (index: number) => {
     setAnchorEl(null);
+    setClickedIndex((state) => ({
+      ...state,
+      [index]: !state[index],
+    }));
   };
 
   const filterData = [
@@ -186,7 +216,7 @@ export default function TodoDetail() {
           return (
             <>
               <MenuItem
-                onClick={filter.onClickFunc}
+                onClick={() => filter.onClickFunc(index)}
                 sx={{ display: "flex", justifyContent: "space-between" }}
                 key={filter.id}
               >
@@ -200,9 +230,11 @@ export default function TodoDetail() {
                   </ListItemIcon>
                   {filter.name}
                 </Grid>
-                <ListItemIcon>
-                  <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-                </ListItemIcon>
+                {clickedIndex[index] ? (
+                  <ListItemIcon>
+                    <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+                  </ListItemIcon>
+                ) : null}
               </MenuItem>
               <Divider />
             </>
