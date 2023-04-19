@@ -12,11 +12,12 @@ interface TitlebarProps {
   type?: string;
   todo?: boolean;
   handleClick?: any;
+  handleOpenAddTodo?: any;
   nameTodo?: string;
 }
 
 export default function Titlebar(props: TitlebarProps) {
-  const { type, todo, handleClick, nameTodo } = props;
+  const { type, todo, handleClick, nameTodo, handleOpenAddTodo } = props;
   const navigate = useNavigate();
   const backToDashboard = () => {
     navigate("/");
@@ -71,6 +72,7 @@ export default function Titlebar(props: TitlebarProps) {
                   width: 159,
                   title: "Tambah",
                   color: "#16ABF8",
+                  onClick: handleOpenAddTodo,
                 }}
               />
             </Grid>

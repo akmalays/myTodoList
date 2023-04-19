@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -21,6 +22,7 @@ import selectedIcon from "../../assets/icons/selected-icon.svg";
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
 import NoTodoImages from "../../assets/images/todo-empty-state.svg";
+import AddItemModal from "../../components/add_item_modal/AddItemModal";
 import ColoredDot from "../../components/colored_dot/ColoredDot";
 import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
 import SvgIcon from "../../components/icon/Icon";
@@ -40,6 +42,7 @@ export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selected, setSelected] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [openAddList, setOpenAddList] = useState<boolean>(false);
 
   const { state } = useLocation();
   const open = Boolean(anchorEl);
@@ -48,6 +51,12 @@ export default function TodoDetail() {
   };
   const onCloseModal = () => {
     setOpenDelete(false);
+  };
+  const handleOpenAddList = () => {
+    setOpenAddList(true);
+  };
+  const onCloseListModal = () => {
+    setOpenAddList(false);
   };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -84,6 +93,7 @@ export default function TodoDetail() {
         type={"tododetail"}
         todo={listTodo.length > 0 ? true : false}
         handleClick={handleClick}
+        handleOpenAddTodo={handleOpenAddList}
         nameTodo={state as string}
       />
       {/* main content */}
@@ -117,7 +127,7 @@ export default function TodoDetail() {
                         sx={{ borderColor: "#4F4F4F", borderWidth: 0.5 }}
                         checked={true}
                       />
-                      <ColoredDot color={"#43C4E3"} size={"9px"} />
+                      <ColoredDot color={"#43C4E3"} size={9} />
                       <Typography
                         sx={{
                           fontWeight: "600",
@@ -131,9 +141,14 @@ export default function TodoDetail() {
                         <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
                       </Grid>
                     </Grid>
-                    <Grid sx={{ cursor: "pointer" }} onClick={handleOpenModal}>
-                      <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
-                    </Grid>
+                    <Tooltip title="delete list" arrow placement="top">
+                      <Grid
+                        sx={{ cursor: "pointer" }}
+                        onClick={handleOpenModal}
+                      >
+                        <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
+                      </Grid>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               );
@@ -248,8 +263,9 @@ export default function TodoDetail() {
       <ConfirmationModal
         open={openDelete}
         closeModal={onCloseModal}
-        title={`"meeting dengan client"`}
+        title={"meeting dengan client"}
       />
+      <AddItemModal open={openAddList} closeModal={onCloseListModal} />
     </div>
   );
 }

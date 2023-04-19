@@ -48,7 +48,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
           pt={5}
         >
           <Typography sx={{ maxWidth: 365, textAlign: "center", fontSize: 18 }}>
-            Apakah anda yakin menghapus activity <strong> {title}</strong> ?
+            Apakah anda yakin menghapus activity <strong> " {title} "</strong> ?
           </Typography>
         </Grid>
         <Grid

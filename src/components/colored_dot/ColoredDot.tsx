@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 
 interface ColoredDotProps {
   color: string;
-  size: string;
+  size: number;
 }
 
 export default function ColoredDot(props: ColoredDotProps) {
