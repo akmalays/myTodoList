@@ -40,7 +40,6 @@ const listTodo = [
 
 export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selected, setSelected] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddList, setOpenAddList] = useState<boolean>(false);
 
@@ -66,24 +65,32 @@ export default function TodoDetail() {
   };
   const sortOlder = () => {
     setAnchorEl(null);
-    setSelected(true);
   };
   const sortNewest = () => {
     setAnchorEl(null);
-    setSelected(true);
   };
   const sortAZ = () => {
     setAnchorEl(null);
-    setSelected(true);
   };
   const sortZA = () => {
     setAnchorEl(null);
-    setSelected(true);
   };
   const sortUndone = () => {
     setAnchorEl(null);
-    setSelected(true);
   };
+
+  const filterData = [
+    { id: 1, name: "Terbaru", icon: TerbaruIcon, onClickFunc: sortNewest },
+    { id: 2, name: "Terlama", icon: TerlamaIcon, onClickFunc: sortOlder },
+    { id: 3, name: "A - Z", icon: AzIcon, onClickFunc: sortZA },
+    { id: 4, name: "Z - A", icon: ZaIcon, onClickFunc: sortAZ },
+    {
+      id: 5,
+      name: "Belum Selesai",
+      icon: UndoneIcon,
+      onClickFunc: sortUndone,
+    },
+  ];
   return (
     <div>
       {/* navbar section */}
@@ -175,90 +182,32 @@ export default function TodoDetail() {
         TransitionComponent={Fade}
         sx={{ "& .MuiPaper-root": { minWidth: 235 } }}
       >
-        <MenuItem
-          onClick={sortNewest}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={TerbaruIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Terbaru
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortOlder}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={TerlamaIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Terlama
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortAZ}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={AzIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            A - Z
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortZA}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={ZaIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Z - A
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={sortUndone}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Grid>
-            <ListItemIcon>
-              <SvgIcon icon={UndoneIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-            Belum Selesai
-          </Grid>
-          {selected === true && (
-            <ListItemIcon>
-              <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
-            </ListItemIcon>
-          )}
-        </MenuItem>
+        {filterData.map((filter, index) => {
+          return (
+            <>
+              <MenuItem
+                onClick={filter.onClickFunc}
+                sx={{ display: "flex", justifyContent: "space-between" }}
+                key={filter.id}
+              >
+                <Grid>
+                  <ListItemIcon>
+                    <SvgIcon
+                      icon={filter.icon as string}
+                      height={"20"}
+                      width={"20"}
+                    />
+                  </ListItemIcon>
+                  {filter.name}
+                </Grid>
+                <ListItemIcon>
+                  <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
+                </ListItemIcon>
+              </MenuItem>
+              <Divider />
+            </>
+          );
+        })}
       </Menu>
       <ConfirmationModal
         open={openDelete}
