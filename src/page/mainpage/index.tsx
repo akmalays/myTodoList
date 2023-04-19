@@ -5,6 +5,7 @@ import { Grid, Typography } from "@mui/material";
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
 import AlertSnackbar from "../../components/alert_snackbar";
+import ConfirmationModal from "../../components/confirmation_modal";
 import SvgIcon from "../../components/icon";
 import Navbar from "../../components/navbar";
 import Titlebar from "../../components/titlebar";
@@ -104,6 +105,7 @@ export default function MainPage() {
           )}
         </Grid>
         {/* <AlertSnackbar caption={"Activity Berhasil Dihapus"} /> */}
+        {/* <ConfirmationModal open={true} title={`"meeting dengan client"`} /> */}
       </Grid>
     </div>
   );

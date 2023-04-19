@@ -65,7 +65,15 @@ export default function Titlebar(props: TitlebarProps) {
                   <SvgIcon icon={sortIcon} height={"24"} width={"24"} />
                 </Grid>
               )}
-              <RoundedButton />
+              <RoundedButton
+                roundedButtonProps={{
+                  height: 54,
+                  width: 159,
+                  type: "no icon",
+                  title: "Tambah",
+                  color: "#16ABF8",
+                }}
+              />
             </Grid>
           </>
         ) : (
@@ -73,7 +81,15 @@ export default function Titlebar(props: TitlebarProps) {
             <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
               Activity
             </Typography>
-            <RoundedButton />
+            <RoundedButton
+              roundedButtonProps={{
+                height: 54,
+                width: 159,
+                type: "no icon",
+                title: "Tambah",
+                color: "#16ABF8",
+              }}
+            />
           </>
         )}
       </Grid>
