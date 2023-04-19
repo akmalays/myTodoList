@@ -21,10 +21,10 @@ import selectedIcon from "../../assets/icons/selected-icon.svg";
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
 import NoTodoImages from "../../assets/images/todo-empty-state.svg";
-import ColoredDot from "../../components/colored_dot";
-import SvgIcon from "../../components/icon";
-import Navbar from "../../components/navbar";
-import Titlebar from "../../components/titlebar";
+import ColoredDot from "../../components/colored_dot/ColoredDot";
+import SvgIcon from "../../components/icon/Icon";
+import Navbar from "../../components/navbar/Navbar";
+import Titlebar from "../../components/titlebar/Titlebar";
 import { styles } from "../../theme/globalstyles";
 
 const listTodo = [

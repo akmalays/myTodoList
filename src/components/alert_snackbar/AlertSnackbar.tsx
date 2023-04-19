@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 
 import AlertIcon from "../../assets/icons/modal-information-icon.svg";
-import SvgIcon from "../icon";
+import SvgIcon from "../icon/Icon";
 
 interface AlertSnackbarProps {
   caption: string;

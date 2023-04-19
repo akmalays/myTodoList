@@ -4,11 +4,11 @@ import { Grid, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
-import AlertSnackbar from "../../components/alert_snackbar";
-import ConfirmationModal from "../../components/confirmation_modal";
-import SvgIcon from "../../components/icon";
-import Navbar from "../../components/navbar";
-import Titlebar from "../../components/titlebar";
+import AlertSnackbar from "../../components/alert_snackbar/AlertSnackbar";
+import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
+import SvgIcon from "../../components/icon/Icon";
+import Navbar from "../../components/navbar/Navbar";
+import Titlebar from "../../components/titlebar/Titlebar";
 import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {

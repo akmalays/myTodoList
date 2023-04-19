@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Dialog, Grid, Typography } from "@mui/material";
 
-import RoundedButton from "../rounded_button";
+import RoundedButton from "../rounded_button/RoundedButton";
 
 interface ConfirmationModalProps {
   open: boolean;

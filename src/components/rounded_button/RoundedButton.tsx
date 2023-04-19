@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from "@mui/material";
 
 import plusIcon from "../../assets/icons/tabler_plus.svg";
 import { StylesSxProps } from "../../theme/custom_style";
-import SvgIcon from "../icon";
+import SvgIcon from "../icon/Icon";
 
 interface RoundedButtonProps {
   roundedButtonProps: {

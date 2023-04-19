@@ -5,8 +5,8 @@ import { Grid, Typography } from "@mui/material";
 import sortIcon from "../../assets/icons/tabler_arrows-sort.svg";
 import BackIcon from "../../assets/icons/todo-back-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
-import SvgIcon from "../icon";
-import RoundedButton from "../rounded_button";
+import SvgIcon from "../icon/Icon";
+import RoundedButton from "../rounded_button/RoundedButton";
 
 interface TitlebarProps {
   type?: string;
@@ -69,7 +69,6 @@ export default function Titlebar(props: TitlebarProps) {
                 roundedButtonProps={{
                   height: 54,
                   width: 159,
-                  type: "no icon",
                   title: "Tambah",
                   color: "#16ABF8",
                 }}
@@ -85,7 +84,6 @@ export default function Titlebar(props: TitlebarProps) {
               roundedButtonProps={{
                 height: 54,
                 width: 159,
-                type: "no icon",
                 title: "Tambah",
                 color: "#16ABF8",
               }}
