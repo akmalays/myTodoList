@@ -11,13 +11,17 @@ import ConfirmationModal from "../../components/confirmation_modal/ConfirmationM
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
-import { getAllActivity } from "../../custom_hooks/api/activity/api";
+import {
+  deleteActivity,
+  getAllActivity,
+} from "../../custom_hooks/api/activity/api";
 import { IGetActivity } from "../../custom_hooks/api/activity/types";
 import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [allActivityValue, setAllActivityValue] = useState<IGetActivity[]>([]);
+  const [id, setId] = useState<number | undefined>(undefined);
 
   const navigate = useNavigate();
   const toTodoDetail = (id: number, title: string) => {
@@ -26,8 +30,9 @@ export default function MainPage() {
     });
   };
 
-  const isOpenModalDelete = () => {
+  const isOpenModalDelete = (id: number | undefined) => {
     setOpenModalDelete(true);
+    setId(id);
   };
   const onCloseModalDelete = () => {
     setOpenModalDelete(false);
@@ -118,8 +123,8 @@ export default function MainPage() {
                       </Typography>
                       <Tooltip title="delete activity" arrow placement="top">
                         <Grid
-                          sx={{ cursor: "pointer", zIndex: 100 }}
-                          onClick={isOpenModalDelete}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => isOpenModalDelete(id)}
                         >
                           <SvgIcon
                             icon={trashIcon}
@@ -158,6 +163,7 @@ export default function MainPage() {
           open={openModalDelete}
           closeModal={onCloseModalDelete}
           title={`"meeting dengan client"`}
+          onClick={deleteActivity(id)}
         />
       </Grid>
     </div>

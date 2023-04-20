@@ -22,3 +22,12 @@ export const postDefaultActivity = async () => {
     throw new Error("gagal mengambil data activity!");
   }
 };
+
+export const deleteActivity = async (id: number | undefined) => {
+  try {
+    const response = await axiosWithConfig.delete(`activity-groups/${id}`);
+    return response.data.payload as string;
+  } catch (error) {
+    throw new Error("Gagal menghapus campaign");
+  }
+};

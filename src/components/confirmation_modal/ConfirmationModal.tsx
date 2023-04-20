@@ -7,9 +7,10 @@ interface ConfirmationModalProps {
   open: boolean;
   closeModal: () => void;
   title: string;
+  onClick?: any;
 }
 export default function ConfirmationModal(props: ConfirmationModalProps) {
-  const { open, closeModal, title } = props;
+  const { open, closeModal, title, onClick } = props;
 
   return (
     <div>
@@ -80,6 +81,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
               title: "Hapus",
               color: "#ED4C5C",
               fontWeight: "600",
+              onClick: onClick,
             }}
           />
         </Grid>
