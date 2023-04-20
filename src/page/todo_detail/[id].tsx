@@ -30,6 +30,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
 import { getAllTodos } from "../../custom_hooks/api/todo/api";
 import { IGetTodo } from "../../custom_hooks/api/todo/types";
+import { getColor } from "../../custom_hooks/utils/utils";
 import { styles } from "../../theme/globalstyles";
 
 const listTodo = [
@@ -179,14 +180,16 @@ export default function TodoDetail() {
                     <Grid display={"flex"} gap={2} alignItems="center">
                       <Checkbox
                         sx={{ borderColor: "#4F4F4F", borderWidth: 0.5 }}
-                        checked={true}
+                        checked={todo.is_active === 0 ? true : false}
                       />
-                      <ColoredDot color={"#43C4E3"} size={9} />
+                      <ColoredDot color={getColor(todo.priority)} size={9} />
                       <Typography
                         sx={{
                           fontWeight: "600",
                           fontSize: 20,
                           textTransform: "capitalize",
+                          textDecoration:
+                            todo.is_active === 0 ? "line-through" : "none",
                         }}
                       >
                         {todo.title}
@@ -208,12 +211,20 @@ export default function TodoDetail() {
               );
             })
           ) : (
-            <img
-              alt="no activity images"
-              src={NoTodoImages}
-              width={"60%"}
-              height={"60%"}
-            />
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "auto",
+              }}
+            >
+              <img
+                alt="no activity images"
+                src={NoTodoImages}
+                width={"60%"}
+                height={"60%"}
+              />
+            </Grid>
           )}
         </Grid>
       </Grid>
