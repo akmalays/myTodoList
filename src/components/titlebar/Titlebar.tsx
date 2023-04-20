@@ -10,7 +10,6 @@ import {
   editActivityName,
   getActivityById,
 } from "../../custom_hooks/api/activity/api";
-import { IGetActivity } from "../../custom_hooks/api/activity/types";
 import SvgIcon from "../icon/Icon";
 import RoundedButton from "../rounded_button/RoundedButton";
 
