@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Grid, Tooltip, Typography } from "@mui/material";
@@ -11,17 +11,13 @@ import ConfirmationModal from "../../components/confirmation_modal/ConfirmationM
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
+import { getAllActivity } from "../../custom_hooks/api/activity/api";
+import { IGetActivity } from "../../custom_hooks/api/activity/types";
 import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
-  const todoListData = [
-    { id: 1, title: "daftar belanja bulanan", time: "5 oktober 2023" },
-    { id: 2, title: "paperworks home work", time: "5 oktober 2023" },
-    { id: 3, title: "gym time", time: "5 oktober 2023" },
-    { id: 4, title: "meditation time", time: "5 oktober 2023" },
-    { id: 5, title: "iftar", time: "5 oktober 2023" },
-  ];
+  const [allActivityValue, setAllActivityValue] = useState<IGetActivity[]>([]);
 
   const navigate = useNavigate();
   const toTodoDetail = (id: number, title: string) => {
@@ -36,6 +32,19 @@ export default function MainPage() {
   const onCloseModalDelete = () => {
     setOpenModalDelete(false);
   };
+
+  const fetchAllActivity = async () => {
+    try {
+      const response = await getAllActivity();
+      setAllActivityValue(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllActivity();
+  }, []);
 
   return (
     <div>
@@ -54,8 +63,8 @@ export default function MainPage() {
           }}
         >
           {/* with data */}
-          {todoListData.length > 0 ? (
-            todoListData.map((todo) => {
+          {allActivityValue.length > 0 ? (
+            allActivityValue.map((todo) => {
               return (
                 <Grid
                   sx={{
@@ -105,7 +114,7 @@ export default function MainPage() {
                           textTransform: "capitalize",
                         }}
                       >
-                        {todo.time}
+                        {todo.created_at}
                       </Typography>
                       <Tooltip title="delete activity" arrow placement="top">
                         <Grid
@@ -125,15 +134,26 @@ export default function MainPage() {
               );
             })
           ) : (
-            <img
-              alt="no activity images"
-              src={NoActivityImages}
-              width={"50%"}
-              height={"50%"}
-            />
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "auto",
+                cursor: "pointer",
+              }}
+            >
+              <img
+                alt="no activity images"
+                src={NoActivityImages}
+                width={"100%"}
+                height={"100%"}
+              />
+            </Grid>
           )}
         </Grid>
-        {/* <AlertSnackbar caption={"Activity Berhasil Dihapus"} /> */}
+        {/* <Grid sx={{ position: "absolute", left: 20, bottom: "10vw" }}>
+          <AlertSnackbar caption={"Activity Berhasil Dihapus"} />
+        </Grid> */}
         <ConfirmationModal
           open={openModalDelete}
           closeModal={onCloseModalDelete}
