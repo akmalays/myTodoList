@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Grid, Tooltip, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
-import AddItemModal from "../../components/add_item_modal/AddItemModal";
 import AlertSnackbar from "../../components/alert_snackbar/AlertSnackbar";
 import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
+import {
+  deleteActivity,
+  getAllActivity,
+  postDefaultActivity,
+} from "../../custom_hooks/api/activity/api";
+import { IGetActivity } from "../../custom_hooks/api/activity/types";
+import { convertDate } from "../../custom_hooks/utils/utils";
 import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
-  const todoListData = [
-    { id: 1, title: "daftar belanja bulanan", time: "5 oktober 2023" },
-    { id: 2, title: "paperworks home work", time: "5 oktober 2023" },
-    { id: 3, title: "gym time", time: "5 oktober 2023" },
-    { id: 4, title: "meditation time", time: "5 oktober 2023" },
-    { id: 5, title: "iftar", time: "5 oktober 2023" },
-  ];
+  const [allActivityValue, setAllActivityValue] = useState<IGetActivity[]>([]);
+  const [id, setId] = useState<number | undefined>(undefined);
+  const [title, setTitle] = useState<string>("");
 
   const navigate = useNavigate();
   const toTodoDetail = (id: number, title: string) => {
@@ -30,19 +32,43 @@ export default function MainPage() {
     });
   };
 
-  const isOpenModalDelete = () => {
+  const isOpenModalDelete = (id: number | undefined, title: string) => {
     setOpenModalDelete(true);
+    setId(id);
+    setTitle(title);
   };
   const onCloseModalDelete = () => {
     setOpenModalDelete(false);
   };
+  const addNewActivity = async () => {
+    await postDefaultActivity();
+    fetchAllActivity();
+  };
+  const deleteMainActivity = async (id: number | undefined) => {
+    await deleteActivity(id);
+    fetchAllActivity();
+    setOpenModalDelete(false);
+  };
+
+  const fetchAllActivity = async () => {
+    try {
+      const response = await getAllActivity();
+      setAllActivityValue(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllActivity();
+  }, []);
 
   return (
     <div>
       {/* navbar section */}
       <Navbar />
       {/* title section */}
-      <Titlebar />
+      <Titlebar handleClick={addNewActivity} />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
         <Grid
@@ -54,8 +80,8 @@ export default function MainPage() {
           }}
         >
           {/* with data */}
-          {todoListData.length > 0 ? (
-            todoListData.map((todo) => {
+          {allActivityValue.length > 0 ? (
+            allActivityValue.map((todo) => {
               return (
                 <Grid
                   sx={{
@@ -105,12 +131,12 @@ export default function MainPage() {
                           textTransform: "capitalize",
                         }}
                       >
-                        {todo.time}
+                        {convertDate(todo.created_at)}
                       </Typography>
                       <Tooltip title="delete activity" arrow placement="top">
                         <Grid
-                          sx={{ cursor: "pointer", zIndex: 100 }}
-                          onClick={isOpenModalDelete}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => isOpenModalDelete(todo.id, todo.title)}
                         >
                           <SvgIcon
                             icon={trashIcon}
@@ -125,19 +151,31 @@ export default function MainPage() {
               );
             })
           ) : (
-            <img
-              alt="no activity images"
-              src={NoActivityImages}
-              width={"50%"}
-              height={"50%"}
-            />
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "auto",
+                cursor: "pointer",
+              }}
+            >
+              <img
+                alt="no activity images"
+                src={NoActivityImages}
+                width={"100%"}
+                height={"100%"}
+              />
+            </Grid>
           )}
         </Grid>
-        {/* <AlertSnackbar caption={"Activity Berhasil Dihapus"} /> */}
+        {/* <Grid sx={{ position: "absolute", left: 20, bottom: "10vw" }}>
+          <AlertSnackbar caption={"Activity Berhasil Dihapus"} />
+        </Grid> */}
         <ConfirmationModal
           open={openModalDelete}
           closeModal={onCloseModalDelete}
-          title={`"meeting dengan client"`}
+          title={title}
+          onClick={() => deleteMainActivity(id)}
         />
       </Grid>
     </div>
