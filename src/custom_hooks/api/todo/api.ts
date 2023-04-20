@@ -11,3 +11,11 @@ export const getAllTodos = async (id: string | undefined) => {
     throw new Error("gagal mengambil data activity!");
   }
 };
+
+export const deleteTodos = async (id: number | undefined) => {
+  try {
+    await axiosWithConfig.delete(`todo-items/${id}`);
+  } catch (error) {
+    throw new Error("Gagal menghapus activity");
+  }
+};

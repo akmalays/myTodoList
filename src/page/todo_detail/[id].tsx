@@ -28,21 +28,15 @@ import ConfirmationModal from "../../components/confirmation_modal/ConfirmationM
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
-import { getAllTodos } from "../../custom_hooks/api/todo/api";
+import { deleteTodos, getAllTodos } from "../../custom_hooks/api/todo/api";
 import { IGetTodo } from "../../custom_hooks/api/todo/types";
 import { getColor } from "../../custom_hooks/utils/utils";
 import { styles } from "../../theme/globalstyles";
 
-const listTodo = [
-  { id: 1, item: "TelurAyam" },
-  { id: 2, item: "Beras 5kg" },
-  { id: 3, item: "Daging" },
-  { id: 4, item: "Micin" },
-  { id: 5, item: "Sosis" },
-];
-
 export default function TodoDetail() {
   const [todoItem, setTodoItem] = useState<IGetTodo[]>([]);
+  const [clickedId, setClickedId] = useState<number>();
+  const [todosName, setTodosName] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddList, setOpenAddList] = useState<boolean>(false);
@@ -60,8 +54,10 @@ export default function TodoDetail() {
   const { id } = useParams();
   const { state } = useLocation();
   const open = Boolean(anchorEl);
-  const handleOpenModal = () => {
+  const handleOpenModalDelete = (id: number, todosName: string) => {
     setOpenDelete(true);
+    setClickedId(id);
+    setTodosName(todosName);
   };
   const onCloseModal = () => {
     setOpenDelete(false);
@@ -128,8 +124,12 @@ export default function TodoDetail() {
   ];
 
   const getAllTodoItems = async (id: string) => {
-    const response = await getAllTodos(id);
-    setTodoItem(response);
+    try {
+      const response = await getAllTodos(id);
+      setTodoItem(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -138,7 +138,13 @@ export default function TodoDetail() {
     }
   }, [id]);
 
-  console.log(todoItem, "todos");
+  const deleteTodosItem = async (clickedId: number) => {
+    await deleteTodos(clickedId);
+    getAllTodoItems(id as string);
+    setOpenDelete(false);
+  };
+
+  console.log(clickedId, "id");
   return (
     <div>
       {/* navbar section */}
@@ -146,7 +152,7 @@ export default function TodoDetail() {
       {/* title section */}
       <Titlebar
         type={"tododetail"}
-        todo={listTodo.length > 0 ? true : false}
+        todo={todoItem.length > 0 ? true : false}
         handleClick={handleClick}
         handleOpenAddTodo={handleOpenAddList}
         nameTodo={state as string}
@@ -201,7 +207,9 @@ export default function TodoDetail() {
                     <Tooltip title="delete list" arrow placement="top">
                       <Grid
                         sx={{ cursor: "pointer" }}
-                        onClick={handleOpenModal}
+                        onClick={() =>
+                          handleOpenModalDelete(todo.id, todo.title)
+                        }
                       >
                         <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
                       </Grid>
@@ -272,7 +280,8 @@ export default function TodoDetail() {
       <ConfirmationModal
         open={openDelete}
         closeModal={onCloseModal}
-        title={"meeting dengan client"}
+        title={todosName}
+        onClick={() => deleteTodosItem(clickedId as number)}
       />
       <AddItemModal open={openAddList} closeModal={onCloseListModal} />
     </div>
