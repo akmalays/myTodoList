@@ -1,10 +1,16 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Typography } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 
 import sortIcon from "../../assets/icons/tabler_arrows-sort.svg";
 import BackIcon from "../../assets/icons/todo-back-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
+import {
+  editActivityName,
+  getActivityById,
+} from "../../custom_hooks/api/activity/api";
+import { IGetActivity } from "../../custom_hooks/api/activity/types";
 import SvgIcon from "../icon/Icon";
 import RoundedButton from "../rounded_button/RoundedButton";
 
@@ -13,16 +19,37 @@ interface TitlebarProps {
   todo?: boolean;
   handleClick?: any;
   handleOpenAddTodo?: any;
-  nameTodo?: string;
+  activityId?: string;
 }
 
 export default function Titlebar(props: TitlebarProps) {
-  const { type, todo, handleClick, nameTodo, handleOpenAddTodo } = props;
+  const { type, todo, handleClick, handleOpenAddTodo, activityId } = props;
+  const [activityName, setActivityName] = useState<string>("");
   const navigate = useNavigate();
   const backToDashboard = () => {
     navigate("/");
   };
 
+  const getTodoNameById = async (activityId: string) => {
+    try {
+      const nameTodoById = await getActivityById(activityId);
+      setActivityName(nameTodoById.title);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTodoNameById(activityId as string);
+  }, [activityId]);
+
+  const handleChangeActivityName = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    await setActivityName(event.target.value);
+    await editActivityName(activityId as string, event.target.value);
+    getTodoNameById(activityId as string);
+  };
   return (
     <div>
       <Grid
@@ -40,10 +67,23 @@ export default function Titlebar(props: TitlebarProps) {
               <Grid sx={{ cursor: "pointer" }} onClick={backToDashboard}>
                 <SvgIcon icon={BackIcon} height={"28"} width={"28"} />
               </Grid>
-              <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
-                {nameTodo}
-              </Typography>
-              <Grid sx={{ cursor: "pointer" }}>
+              <TextField
+                size="medium"
+                value={activityName}
+                onChange={handleChangeActivityName}
+                inputProps={{
+                  style: {
+                    fontSize: 40,
+                    fontWeight: "bold",
+                    fontFamily: "Poppins",
+                  },
+                }}
+                sx={{
+                  width: 300,
+                  "& fieldset": { border: "none" },
+                }}
+              />
+              <Grid sx={{ cursor: "pointer", ml: -7, zIndex: 100 }}>
                 <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
               </Grid>
             </Grid>

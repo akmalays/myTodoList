@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import {
   Checkbox,
@@ -28,43 +28,58 @@ import ConfirmationModal from "../../components/confirmation_modal/ConfirmationM
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
+import {
+  changeActiveTodos,
+  deleteTodos,
+  getAllTodos,
+  getTodosById,
+} from "../../custom_hooks/api/todo/api";
+import { IGetTodo } from "../../custom_hooks/api/todo/types";
+import { getColor } from "../../custom_hooks/utils/utils";
 import { styles } from "../../theme/globalstyles";
 
-const listTodo = [
-  { id: 1, item: "TelurAyam" },
-  { id: 2, item: "Beras 5kg" },
-  { id: 3, item: "Daging" },
-  { id: 4, item: "Micin" },
-  { id: 5, item: "Sosis" },
-];
-
 export default function TodoDetail() {
+  const [todoItem, setTodoItem] = useState<IGetTodo[]>([]);
+  const [todoItemById, setTodoItemById] = useState<IGetTodo | null>();
+  const [clickedId, setClickedId] = useState<number | null>();
+  const [activityId, setActivityId] = useState<string>();
+  const [todosName, setTodosName] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddList, setOpenAddList] = useState<boolean>(false);
   const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
     {}
   );
-  //handle clicked filter
-  const handleClickFilter = (index: number) => () => {
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
+  const { id } = useParams();
+  const open = Boolean(anchorEl);
+
+  const handleOpenModalDelete = (id: number, todosName: string) => {
+    setOpenDelete(true);
+    setClickedId(id);
+    setTodosName(todosName);
   };
 
-  const { state } = useLocation();
-  const open = Boolean(anchorEl);
-  const handleOpenModal = () => {
-    setOpenDelete(true);
+  const changeActiveValue = async (todoId: number) => {
+    const response = await getTodosById(todoId);
+    await changeActiveTodos(response as IGetTodo);
+    getAllTodoItems(id as string);
   };
+
   const onCloseModal = () => {
     setOpenDelete(false);
   };
   const handleOpenAddList = () => {
     setOpenAddList(true);
+    setActivityId(id);
+  };
+  const handleOpenEditList = async (todoId: number) => {
+    setOpenAddList(true);
+    const response = await getTodosById(todoId);
+    setTodoItemById(response);
+    setClickedId(todoId);
   };
   const onCloseListModal = () => {
+    setTodoItemById(null);
     setOpenAddList(false);
   };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -121,6 +136,28 @@ export default function TodoDetail() {
       onClickFunc: sortUndone,
     },
   ];
+
+  const getAllTodoItems = async (id: string) => {
+    try {
+      const response = await getAllTodos(id);
+      setTodoItem(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getAllTodoItems(id);
+    }
+  }, [id]);
+
+  const deleteTodosItem = async (clickedId: number) => {
+    await deleteTodos(clickedId);
+    getAllTodoItems(id as string);
+    setOpenDelete(false);
+  };
+
   return (
     <div>
       {/* navbar section */}
@@ -128,16 +165,16 @@ export default function TodoDetail() {
       {/* title section */}
       <Titlebar
         type={"tododetail"}
-        todo={listTodo.length > 0 ? true : false}
+        activityId={id}
+        todo={todoItem.length > 0 ? true : false}
         handleClick={handleClick}
         handleOpenAddTodo={handleOpenAddList}
-        nameTodo={state as string}
       />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
         <Grid container display={"column"} justifyContent={"center"}>
-          {listTodo.length > 0 ? (
-            listTodo.map((todo) => {
+          {todoItem.length > 0 ? (
+            todoItem.map((todo) => {
               return (
                 <Grid
                   sx={{
@@ -162,26 +199,33 @@ export default function TodoDetail() {
                     <Grid display={"flex"} gap={2} alignItems="center">
                       <Checkbox
                         sx={{ borderColor: "#4F4F4F", borderWidth: 0.5 }}
-                        checked={true}
+                        checked={todo.is_active === 0 ? true : false}
+                        onChange={() => changeActiveValue(todo.id)}
                       />
-                      <ColoredDot color={"#43C4E3"} size={9} />
+                      <ColoredDot color={getColor(todo.priority)} size={9} />
                       <Typography
                         sx={{
                           fontWeight: "600",
                           fontSize: 20,
-                          textTransform: "capitalize",
+                          textDecoration:
+                            todo.is_active === 0 ? "line-through" : "none",
                         }}
                       >
-                        {todo.item}
+                        {todo.title}
                       </Typography>
-                      <Grid sx={{ cursor: "pointer" }}>
+                      <Grid
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleOpenEditList(todo.id)}
+                      >
                         <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
                       </Grid>
                     </Grid>
                     <Tooltip title="delete list" arrow placement="top">
                       <Grid
                         sx={{ cursor: "pointer" }}
-                        onClick={handleOpenModal}
+                        onClick={() =>
+                          handleOpenModalDelete(todo.id, todo.title)
+                        }
                       >
                         <SvgIcon icon={trashIcon} height={"23"} width={"23"} />
                       </Grid>
@@ -191,12 +235,20 @@ export default function TodoDetail() {
               );
             })
           ) : (
-            <img
-              alt="no activity images"
-              src={NoTodoImages}
-              width={"60%"}
-              height={"60%"}
-            />
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "auto",
+              }}
+            >
+              <img
+                alt="no activity images"
+                src={NoTodoImages}
+                width={"100%"}
+                height={"100%"}
+              />
+            </Grid>
           )}
         </Grid>
       </Grid>
@@ -214,7 +266,7 @@ export default function TodoDetail() {
       >
         {filterData.map((filter, index) => {
           return (
-            <>
+            <div>
               <MenuItem
                 onClick={() => filter.onClickFunc(index)}
                 sx={{ display: "flex", justifyContent: "space-between" }}
@@ -237,16 +289,25 @@ export default function TodoDetail() {
                 ) : null}
               </MenuItem>
               <Divider />
-            </>
+            </div>
           );
         })}
       </Menu>
       <ConfirmationModal
         open={openDelete}
         closeModal={onCloseModal}
-        title={"meeting dengan client"}
+        title={todosName}
+        onClick={() => deleteTodosItem(clickedId as number)}
       />
-      <AddItemModal open={openAddList} closeModal={onCloseListModal} />
+      <AddItemModal
+        open={openAddList}
+        closeModal={onCloseListModal}
+        getAllTodoItems={() => getAllTodoItems(id as string)}
+        activityId={activityId as string}
+        setOpenAddList={setOpenAddList}
+        clickedId={clickedId as number}
+        todoItemById={todoItemById as IGetTodo}
+      />
     </div>
   );
 }
