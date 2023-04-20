@@ -18,8 +18,7 @@ export const postDefaultActivity = async () => {
       title: "New Activity",
       email: "royman.dev@gmail.com",
     };
-    const response = await axiosWithConfig.post(`activity-groups`, requestBody);
-    return response.data.payload as string;
+    await axiosWithConfig.post(`activity-groups`, requestBody);
   } catch (error) {
     throw new Error("gagal tambah activity baru!");
   }
