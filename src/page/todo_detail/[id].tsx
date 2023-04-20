@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Checkbox,
@@ -51,7 +51,6 @@ export default function TodoDetail() {
     {}
   );
   const { id } = useParams();
-  const { state } = useLocation();
   const open = Boolean(anchorEl);
 
   const handleOpenModalDelete = (id: number, todosName: string) => {
@@ -166,10 +165,10 @@ export default function TodoDetail() {
       {/* title section */}
       <Titlebar
         type={"tododetail"}
+        activityId={id}
         todo={todoItem.length > 0 ? true : false}
         handleClick={handleClick}
         handleOpenAddTodo={handleOpenAddList}
-        nameTodo={state as string}
       />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
