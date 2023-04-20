@@ -13,7 +13,6 @@ export const getAllActivity = async () => {
 };
 
 export const postDefaultActivity = async () => {
-  console.log("masuk post");
   try {
     const requestBody = {
       title: "New Activity",
@@ -27,11 +26,9 @@ export const postDefaultActivity = async () => {
 };
 
 export const deleteActivity = async (id: number | undefined) => {
-  console.log("masuk delete");
   try {
-    const response = await axiosWithConfig.delete(`activity-groups/${id}`);
-    return response.data.payload as string;
+    await axiosWithConfig.delete(`activity-groups/${id}`);
   } catch (error) {
-    throw new Error("Gagal menghapus campaign");
+    throw new Error("Gagal menghapus activity");
   }
 };

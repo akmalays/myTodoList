@@ -5,7 +5,6 @@ import { Grid, Tooltip, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
-import AddItemModal from "../../components/add_item_modal/AddItemModal";
 import AlertSnackbar from "../../components/alert_snackbar/AlertSnackbar";
 import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
 import SvgIcon from "../../components/icon/Icon";
@@ -24,6 +23,7 @@ export default function MainPage() {
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [allActivityValue, setAllActivityValue] = useState<IGetActivity[]>([]);
   const [id, setId] = useState<number | undefined>(undefined);
+  const [title, setTitle] = useState<string>("");
 
   const navigate = useNavigate();
   const toTodoDetail = (id: number, title: string) => {
@@ -32,16 +32,22 @@ export default function MainPage() {
     });
   };
 
-  const isOpenModalDelete = (id: number | undefined) => {
+  const isOpenModalDelete = (id: number | undefined, title: string) => {
     setOpenModalDelete(true);
     setId(id);
+    setTitle(title);
   };
   const onCloseModalDelete = () => {
     setOpenModalDelete(false);
   };
-  const addNewActivity = () => {
-    postDefaultActivity();
+  const addNewActivity = async () => {
+    await postDefaultActivity();
     fetchAllActivity();
+  };
+  const deleteMainActivity = async (id: number | undefined) => {
+    await deleteActivity(id);
+    fetchAllActivity();
+    setOpenModalDelete(false);
   };
 
   const fetchAllActivity = async () => {
@@ -130,7 +136,7 @@ export default function MainPage() {
                       <Tooltip title="delete activity" arrow placement="top">
                         <Grid
                           sx={{ cursor: "pointer" }}
-                          onClick={() => isOpenModalDelete(id)}
+                          onClick={() => isOpenModalDelete(todo.id, todo.title)}
                         >
                           <SvgIcon
                             icon={trashIcon}
@@ -168,7 +174,8 @@ export default function MainPage() {
         <ConfirmationModal
           open={openModalDelete}
           closeModal={onCloseModalDelete}
-          title={`"meeting dengan client"`}
+          title={title}
+          onClick={() => deleteMainActivity(id)}
         />
       </Grid>
     </div>
