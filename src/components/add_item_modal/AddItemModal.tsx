@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -10,7 +10,8 @@ import {
 } from "@mui/material";
 
 import closeIcon from "../../assets/icons/modal-add-close-button.svg";
-import { postTodos } from "../../custom_hooks/api/todo/api";
+import { editTodos, postTodos } from "../../custom_hooks/api/todo/api";
+import { IGetTodo } from "../../custom_hooks/api/todo/types";
 import ColoredDot from "../colored_dot/ColoredDot";
 import SvgIcon from "../icon/Icon";
 import RoundedButton from "../rounded_button/RoundedButton";
@@ -21,6 +22,8 @@ interface AddItemModalProps {
   activityId: string;
   getAllTodoItems: any;
   setOpenAddList: (active: boolean) => void;
+  clickedId?: number;
+  todoItemById?: IGetTodo;
 }
 
 const prioriyData = [
@@ -56,8 +59,14 @@ const prioriyData = [
   },
 ];
 export default function AddItemModal(props: AddItemModalProps) {
-  const { open, closeModal, activityId, getAllTodoItems, setOpenAddList } =
-    props;
+  const {
+    open,
+    closeModal,
+    activityId,
+    getAllTodoItems,
+    setOpenAddList,
+    todoItemById,
+  } = props;
 
   const [todoNameValue, setTodoNameValue] = useState<string>("");
   const [priorityStatus, setPriorityStatus] = useState<string>("very-high");
@@ -76,6 +85,22 @@ export default function AddItemModal(props: AddItemModalProps) {
     setPriorityStatus("very-high");
     setOpenAddList(false);
   };
+  const editTodosValue = async () => {
+    await editTodos(todoItemById as IGetTodo, priorityStatus, todoNameValue);
+    getAllTodoItems(activityId as string);
+    setOpenAddList(false);
+  };
+
+  useEffect(() => {
+    if (todoItemById?.priority) {
+      setTodoNameValue(todoItemById?.title as string);
+      setPriorityStatus(todoItemById?.priority as string);
+    }
+    if (todoItemById === null) {
+      setTodoNameValue("");
+      setPriorityStatus("very-high");
+    }
+  }, [todoItemById?.priority]);
   return (
     <div>
       <Dialog
@@ -168,8 +193,12 @@ export default function AddItemModal(props: AddItemModalProps) {
               title: "Simpan",
               color: "#16ABF8",
               fontWeight: "600",
-              isDisabled: todoNameValue.length > 0 ? false : true,
-              onClick: addNewTodos,
+              isDisabled: todoNameValue
+                ? todoNameValue.length > 0
+                  ? undefined
+                  : false
+                : true,
+              onClick: todoItemById === null ? addNewTodos : editTodosValue,
             }}
           />
         </Grid>

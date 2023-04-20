@@ -46,8 +46,6 @@ export const postTodos = async (
 };
 
 export const changeActiveTodos = async (todos: IGetTodo) => {
-  console.log("masuk todos change active");
-  console.log(todos, "todo");
   try {
     const requestBody = {
       activity_group_id: todos.activity_group_id,
@@ -59,5 +57,22 @@ export const changeActiveTodos = async (todos: IGetTodo) => {
     await axiosWithConfig.patch(`todo-items/${todos.id}`, requestBody);
   } catch (error) {
     throw new Error("gagal ubah status activity!");
+  }
+};
+
+export const editTodos = async (
+  todos: IGetTodo,
+  priority: string,
+  title: string
+) => {
+  try {
+    const requestBody = {
+      is_active: todos.is_active,
+      priority: priority,
+      title: title,
+    };
+    await axiosWithConfig.patch(`todo-items/${todos.id}`, requestBody);
+  } catch (error) {
+    throw new Error("gagal edit todos!");
   }
 };

@@ -40,12 +40,12 @@ import { styles } from "../../theme/globalstyles";
 
 export default function TodoDetail() {
   const [todoItem, setTodoItem] = useState<IGetTodo[]>([]);
-  const [clickedId, setClickedId] = useState<number>();
+  const [todoItemById, setTodoItemById] = useState<IGetTodo | null>();
+  const [clickedId, setClickedId] = useState<number | null>();
   const [activityId, setActivityId] = useState<string>();
   const [todosName, setTodosName] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-
   const [openAddList, setOpenAddList] = useState<boolean>(false);
   const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
     {}
@@ -73,7 +73,14 @@ export default function TodoDetail() {
     setOpenAddList(true);
     setActivityId(id);
   };
+  const handleOpenEditList = async (todoId: number) => {
+    setOpenAddList(true);
+    const response = await getTodosById(todoId);
+    setTodoItemById(response);
+    setClickedId(todoId);
+  };
   const onCloseListModal = () => {
+    setTodoItemById(null);
     setOpenAddList(false);
   };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -207,7 +214,10 @@ export default function TodoDetail() {
                       >
                         {todo.title}
                       </Typography>
-                      <Grid sx={{ cursor: "pointer" }}>
+                      <Grid
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleOpenEditList(todo.id)}
+                      >
                         <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
                       </Grid>
                     </Grid>
@@ -296,6 +306,8 @@ export default function TodoDetail() {
         getAllTodoItems={() => getAllTodoItems(id as string)}
         activityId={activityId as string}
         setOpenAddList={setOpenAddList}
+        clickedId={clickedId as number}
+        todoItemById={todoItemById as IGetTodo}
       />
     </div>
   );
