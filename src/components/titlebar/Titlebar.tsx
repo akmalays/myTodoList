@@ -88,6 +88,7 @@ export default function Titlebar(props: TitlebarProps) {
                 width: 159,
                 title: "Tambah",
                 color: "#16ABF8",
+                onClick: handleClick,
               }}
             />
           </>

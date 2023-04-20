@@ -4,26 +4,30 @@ import { IGetActivity } from "./types";
 export const getAllActivity = async () => {
   try {
     const response = await axiosWithConfig.get(
-      `activity-groups?email=akmalays@gmail.com`
+      `activity-groups?email=royman.dev@gmail.com`
     );
-    return response.data as IGetActivity[];
+    return response.data.data as IGetActivity[];
   } catch (error) {
     throw new Error("gagal mengambil data activity!");
   }
 };
 
 export const postDefaultActivity = async () => {
+  console.log("masuk post");
   try {
-    const response = await axiosWithConfig.post(
-      `activity-groups?email=akmalays@gmail.com`
-    );
-    return response.data as IGetActivity[];
+    const requestBody = {
+      title: "New Activity",
+      email: "royman.dev@gmail.com",
+    };
+    const response = await axiosWithConfig.post(`activity-groups`, requestBody);
+    return response.data.payload as string;
   } catch (error) {
-    throw new Error("gagal mengambil data activity!");
+    throw new Error("gagal tambah activity baru!");
   }
 };
 
 export const deleteActivity = async (id: number | undefined) => {
+  console.log("masuk delete");
   try {
     const response = await axiosWithConfig.delete(`activity-groups/${id}`);
     return response.data.payload as string;

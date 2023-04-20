@@ -14,8 +14,10 @@ import Titlebar from "../../components/titlebar/Titlebar";
 import {
   deleteActivity,
   getAllActivity,
+  postDefaultActivity,
 } from "../../custom_hooks/api/activity/api";
 import { IGetActivity } from "../../custom_hooks/api/activity/types";
+import { convertDate } from "../../custom_hooks/utils/utils";
 import { styles } from "../../theme/globalstyles";
 
 export default function MainPage() {
@@ -37,6 +39,10 @@ export default function MainPage() {
   const onCloseModalDelete = () => {
     setOpenModalDelete(false);
   };
+  const addNewActivity = () => {
+    postDefaultActivity();
+    fetchAllActivity();
+  };
 
   const fetchAllActivity = async () => {
     try {
@@ -56,7 +62,7 @@ export default function MainPage() {
       {/* navbar section */}
       <Navbar />
       {/* title section */}
-      <Titlebar />
+      <Titlebar handleClick={addNewActivity} />
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
         <Grid
@@ -119,7 +125,7 @@ export default function MainPage() {
                           textTransform: "capitalize",
                         }}
                       >
-                        {todo.created_at}
+                        {convertDate(todo.created_at)}
                       </Typography>
                       <Tooltip title="delete activity" arrow placement="top">
                         <Grid
@@ -163,7 +169,6 @@ export default function MainPage() {
           open={openModalDelete}
           closeModal={onCloseModalDelete}
           title={`"meeting dengan client"`}
-          onClick={deleteActivity(id)}
         />
       </Grid>
     </div>
