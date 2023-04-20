@@ -19,3 +19,20 @@ export const deleteTodos = async (id: number | undefined) => {
     throw new Error("Gagal menghapus activity");
   }
 };
+
+export const postTodos = async (
+  groups_id: string,
+  priority: string,
+  title: string
+) => {
+  try {
+    const requestBody = {
+      activity_group_id: parseInt(groups_id),
+      priority: priority,
+      title: title,
+    };
+    await axiosWithConfig.post(`todo-items`, requestBody);
+  } catch (error) {
+    throw new Error("gagal tambah activity baru!");
+  }
+};

@@ -28,7 +28,11 @@ import ConfirmationModal from "../../components/confirmation_modal/ConfirmationM
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
-import { deleteTodos, getAllTodos } from "../../custom_hooks/api/todo/api";
+import {
+  deleteTodos,
+  getAllTodos,
+  postTodos,
+} from "../../custom_hooks/api/todo/api";
 import { IGetTodo } from "../../custom_hooks/api/todo/types";
 import { getColor } from "../../custom_hooks/utils/utils";
 import { styles } from "../../theme/globalstyles";
@@ -36,13 +40,18 @@ import { styles } from "../../theme/globalstyles";
 export default function TodoDetail() {
   const [todoItem, setTodoItem] = useState<IGetTodo[]>([]);
   const [clickedId, setClickedId] = useState<number>();
+  const [activityId, setActivityId] = useState<string>();
   const [todosName, setTodosName] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+
   const [openAddList, setOpenAddList] = useState<boolean>(false);
   const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const { id } = useParams();
+  const { state } = useLocation();
+  const open = Boolean(anchorEl);
 
   //handle clicked filter
   const handleClickFilter = (index: number) => () => {
@@ -51,9 +60,7 @@ export default function TodoDetail() {
       [index]: !state[index],
     }));
   };
-  const { id } = useParams();
-  const { state } = useLocation();
-  const open = Boolean(anchorEl);
+
   const handleOpenModalDelete = (id: number, todosName: string) => {
     setOpenDelete(true);
     setClickedId(id);
@@ -64,6 +71,7 @@ export default function TodoDetail() {
   };
   const handleOpenAddList = () => {
     setOpenAddList(true);
+    setActivityId(id);
   };
   const onCloseListModal = () => {
     setOpenAddList(false);
@@ -144,7 +152,6 @@ export default function TodoDetail() {
     setOpenDelete(false);
   };
 
-  console.log(clickedId, "id");
   return (
     <div>
       {/* navbar section */}
@@ -193,7 +200,6 @@ export default function TodoDetail() {
                         sx={{
                           fontWeight: "600",
                           fontSize: 20,
-                          textTransform: "capitalize",
                           textDecoration:
                             todo.is_active === 0 ? "line-through" : "none",
                         }}
@@ -283,7 +289,13 @@ export default function TodoDetail() {
         title={todosName}
         onClick={() => deleteTodosItem(clickedId as number)}
       />
-      <AddItemModal open={openAddList} closeModal={onCloseListModal} />
+      <AddItemModal
+        open={openAddList}
+        closeModal={onCloseListModal}
+        getAllTodoItems={() => getAllTodoItems(id as string)}
+        activityId={activityId as string}
+        setOpenAddList={setOpenAddList}
+      />
     </div>
   );
 }

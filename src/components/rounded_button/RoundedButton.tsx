@@ -1,4 +1,5 @@
 import { Button, Grid, Typography } from "@mui/material";
+import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 import plusIcon from "../../assets/icons/tabler_plus.svg";
 import { StylesSxProps } from "../../theme/custom_style";
@@ -7,6 +8,7 @@ import SvgIcon from "../icon/Icon";
 interface RoundedButtonProps {
   roundedButtonProps: {
     type?: string;
+    isDisabled?: boolean;
     width: number;
     height: number;
     title: string;
@@ -26,7 +28,9 @@ export default function RoundedButton(props: RoundedButtonProps) {
       width: roundedButtonProps.width,
       height: roundedButtonProps.height,
       textTransform: "none",
-      backgroundColor: roundedButtonProps.color,
+      backgroundColor: roundedButtonProps.isDisabled
+        ? "#f4f4f4"
+        : roundedButtonProps.color,
       color: roundedButtonProps.fontColor
         ? roundedButtonProps.fontColor
         : "white",
@@ -41,7 +45,11 @@ export default function RoundedButton(props: RoundedButtonProps) {
   return (
     <div>
       {roundedButtonProps.type === "no icon" ? (
-        <Button sx={styles.button} onClick={roundedButtonProps.onClick}>
+        <Button
+          sx={styles.button}
+          onClick={roundedButtonProps.onClick}
+          disabled={roundedButtonProps.isDisabled}
+        >
           <Grid sx={{ display: "flex", gap: 1 }}>
             <Typography
               sx={{
