@@ -11,6 +11,14 @@ export const getAllTodos = async (id: string | undefined) => {
     throw new Error("gagal mengambil data activity!");
   }
 };
+export const getTodosById = async (id: number | undefined) => {
+  try {
+    const response = await axiosWithConfig.get(`todo-items/${id}`);
+    return response.data as IGetTodo;
+  } catch (error) {
+    throw new Error("gagal mengambil data activity!");
+  }
+};
 
 export const deleteTodos = async (id: number | undefined) => {
   try {
@@ -34,5 +42,22 @@ export const postTodos = async (
     await axiosWithConfig.post(`todo-items`, requestBody);
   } catch (error) {
     throw new Error("gagal tambah activity baru!");
+  }
+};
+
+export const changeActiveTodos = async (todos: IGetTodo) => {
+  console.log("masuk todos change active");
+  console.log(todos, "todo");
+  try {
+    const requestBody = {
+      activity_group_id: todos.activity_group_id,
+      id: todos.id,
+      is_active: todos.is_active === 1 ? 0 : 1,
+      priority: todos.priority,
+      title: todos.title,
+    };
+    await axiosWithConfig.patch(`todo-items/${todos.id}`, requestBody);
+  } catch (error) {
+    throw new Error("gagal ubah status activity!");
   }
 };

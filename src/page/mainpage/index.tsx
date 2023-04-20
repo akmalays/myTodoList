@@ -5,7 +5,6 @@ import { Grid, Tooltip, Typography } from "@mui/material";
 
 import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import NoActivityImages from "../../assets/images/activity-empty-state.svg";
-import AlertSnackbar from "../../components/alert_snackbar/AlertSnackbar";
 import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";

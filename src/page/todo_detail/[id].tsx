@@ -29,9 +29,10 @@ import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
 import {
+  changeActiveTodos,
   deleteTodos,
   getAllTodos,
-  postTodos,
+  getTodosById,
 } from "../../custom_hooks/api/todo/api";
 import { IGetTodo } from "../../custom_hooks/api/todo/types";
 import { getColor } from "../../custom_hooks/utils/utils";
@@ -53,19 +54,18 @@ export default function TodoDetail() {
   const { state } = useLocation();
   const open = Boolean(anchorEl);
 
-  //handle clicked filter
-  const handleClickFilter = (index: number) => () => {
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
-  };
-
   const handleOpenModalDelete = (id: number, todosName: string) => {
     setOpenDelete(true);
     setClickedId(id);
     setTodosName(todosName);
   };
+
+  const changeActiveValue = async (todoId: number) => {
+    const response = await getTodosById(todoId);
+    await changeActiveTodos(response as IGetTodo);
+    getAllTodoItems(id as string);
+  };
+
   const onCloseModal = () => {
     setOpenDelete(false);
   };
@@ -194,6 +194,7 @@ export default function TodoDetail() {
                       <Checkbox
                         sx={{ borderColor: "#4F4F4F", borderWidth: 0.5 }}
                         checked={todo.is_active === 0 ? true : false}
+                        onChange={() => changeActiveValue(todo.id)}
                       />
                       <ColoredDot color={getColor(todo.priority)} size={9} />
                       <Typography
@@ -235,8 +236,8 @@ export default function TodoDetail() {
               <img
                 alt="no activity images"
                 src={NoTodoImages}
-                width={"60%"}
-                height={"60%"}
+                width={"100%"}
+                height={"100%"}
               />
             </Grid>
           )}

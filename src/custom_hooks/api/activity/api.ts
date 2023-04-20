@@ -11,6 +11,16 @@ export const getAllActivity = async () => {
     throw new Error("gagal mengambil data activity!");
   }
 };
+export const editActivityName = async (id: number | undefined) => {
+  try {
+    const response = await axiosWithConfig.get(
+      `activity-groups?email=royman.dev@gmail.com`
+    );
+    return response.data.data as IGetActivity[];
+  } catch (error) {
+    throw new Error("gagal mengambil data activity!");
+  }
+};
 
 export const postDefaultActivity = async () => {
   try {
