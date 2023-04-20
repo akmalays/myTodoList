@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 import {
   Checkbox,
@@ -28,6 +28,8 @@ import ConfirmationModal from "../../components/confirmation_modal/ConfirmationM
 import SvgIcon from "../../components/icon/Icon";
 import Navbar from "../../components/navbar/Navbar";
 import Titlebar from "../../components/titlebar/Titlebar";
+import { getAllTodos } from "../../custom_hooks/api/todo/api";
+import { IGetTodo } from "../../custom_hooks/api/todo/types";
 import { styles } from "../../theme/globalstyles";
 
 const listTodo = [
@@ -39,12 +41,14 @@ const listTodo = [
 ];
 
 export default function TodoDetail() {
+  const [todoItem, setTodoItem] = useState<IGetTodo[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddList, setOpenAddList] = useState<boolean>(false);
   const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
     {}
   );
+
   //handle clicked filter
   const handleClickFilter = (index: number) => () => {
     setClickedIndex((state) => ({
@@ -52,7 +56,7 @@ export default function TodoDetail() {
       [index]: !state[index],
     }));
   };
-
+  const { id } = useParams();
   const { state } = useLocation();
   const open = Boolean(anchorEl);
   const handleOpenModal = () => {
@@ -121,6 +125,19 @@ export default function TodoDetail() {
       onClickFunc: sortUndone,
     },
   ];
+
+  const getAllTodoItems = async (id: string) => {
+    const response = await getAllTodos(id);
+    setTodoItem(response);
+  };
+
+  useEffect(() => {
+    if (id) {
+      getAllTodoItems(id);
+    }
+  }, [id]);
+
+  console.log(todoItem, "todos");
   return (
     <div>
       {/* navbar section */}
@@ -136,8 +153,8 @@ export default function TodoDetail() {
       {/* main content */}
       <Grid sx={styles.mainContentContainer}>
         <Grid container display={"column"} justifyContent={"center"}>
-          {listTodo.length > 0 ? (
-            listTodo.map((todo) => {
+          {todoItem.length > 0 ? (
+            todoItem.map((todo) => {
               return (
                 <Grid
                   sx={{
@@ -172,7 +189,7 @@ export default function TodoDetail() {
                           textTransform: "capitalize",
                         }}
                       >
-                        {todo.item}
+                        {todo.title}
                       </Typography>
                       <Grid sx={{ cursor: "pointer" }}>
                         <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
@@ -214,7 +231,7 @@ export default function TodoDetail() {
       >
         {filterData.map((filter, index) => {
           return (
-            <>
+            <div>
               <MenuItem
                 onClick={() => filter.onClickFunc(index)}
                 sx={{ display: "flex", justifyContent: "space-between" }}
@@ -237,7 +254,7 @@ export default function TodoDetail() {
                 ) : null}
               </MenuItem>
               <Divider />
-            </>
+            </div>
           );
         })}
       </Menu>
