@@ -116,6 +116,7 @@ export default function AddItemModal(props: AddItemModalProps) {
         }}
       >
         <Grid
+          data-cy="modal-add-title"
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -126,17 +127,22 @@ export default function AddItemModal(props: AddItemModalProps) {
           <Typography sx={{ fontSize: 18, fontWeight: "bold" }}>
             Tambah List Item
           </Typography>
-          <Grid sx={{ cursor: "pointer" }} onClick={closeModal}>
+          <Grid
+            data-cy="modal-add-close-button"
+            sx={{ cursor: "pointer" }}
+            onClick={closeModal}
+          >
             <SvgIcon icon={closeIcon} height={"25"} width={"25"} />
           </Grid>
         </Grid>
         <Divider />
-        <Grid sx={{ px: 4, pt: 6, pb: 2 }}>
+        <Grid data-cy="modal-add-name-title" sx={{ px: 4, pt: 6, pb: 2 }}>
           <Typography sx={{ fontSize: 12, fontWeight: "600" }}>
             NAMA LIST ITEM
           </Typography>
           <Grid sx={{ pt: 1, pb: 3 }}>
             <TextField
+              data-cy="modal-add-name-input"
               size="medium"
               fullWidth
               placeholder="Tambahkan nama list item"
@@ -155,11 +161,15 @@ export default function AddItemModal(props: AddItemModalProps) {
               onChange={handleTodoNameValue}
             />
           </Grid>
-          <Typography sx={{ fontSize: 12, fontWeight: "600" }}>
+          <Typography
+            data-cy="modal-add-priority-title"
+            sx={{ fontSize: 12, fontWeight: "600" }}
+          >
             PRIORITY
           </Typography>
           <Grid sx={{ pt: 1, pb: 2 }}>
             <TextField
+              data-cy="modal-add-priority-dropdown"
               size="medium"
               sx={{ width: 200 }}
               select
@@ -169,7 +179,11 @@ export default function AddItemModal(props: AddItemModalProps) {
             >
               {prioriyData.map((val) => {
                 return (
-                  <MenuItem value={val.value} key={val.id}>
+                  <MenuItem
+                    value={val.value}
+                    key={val.id}
+                    data-cy="modal-add-priority-item"
+                  >
                     <Grid display="flex" gap={2} px={1}>
                       <Grid sx={{ pt: 0.5 }}>
                         <ColoredDot color={val.color} size={14} />
@@ -187,6 +201,7 @@ export default function AddItemModal(props: AddItemModalProps) {
           sx={{ display: "flex", justifyContent: "flex-end", px: 4, py: 2 }}
         >
           <RoundedButton
+            data-cy="modal-add-save-button"
             roundedButtonProps={{
               height: 54,
               width: 150,
@@ -199,7 +214,7 @@ export default function AddItemModal(props: AddItemModalProps) {
                   ? undefined
                   : false
                 : true,
-              onClick: todoItemById === null ? addNewTodos : editTodosValue,
+              onClick: activityId ? addNewTodos : editTodosValue,
             }}
           />
         </Grid>

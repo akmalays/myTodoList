@@ -62,11 +62,22 @@ export default function Titlebar(props: TitlebarProps) {
       >
         {type === "tododetail" ? (
           <>
-            <Grid sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-              <Grid sx={{ cursor: "pointer" }} onClick={backToDashboard}>
+            <Grid
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Grid
+                data-cy="todo-back-button"
+                sx={{ cursor: "pointer" }}
+                onClick={backToDashboard}
+              >
                 <SvgIcon icon={BackIcon} height={"28"} width={"28"} />
               </Grid>
               <TextField
+                data-cy="todo-title"
                 size="medium"
                 value={activityName}
                 onChange={handleChangeActivityName}
@@ -78,17 +89,25 @@ export default function Titlebar(props: TitlebarProps) {
                   },
                 }}
                 sx={{
-                  width: 300,
+                  width: activityName.length > 5 ? "auto" : 300,
                   "& fieldset": { border: "none" },
                 }}
               />
-              <Grid sx={{ cursor: "pointer", ml: -7, zIndex: 100 }}>
+              <Grid
+                data-cy="todo-title-edit-button"
+                sx={{
+                  cursor: "pointer",
+                  ml: activityName.length > 5 ? -10 : -7,
+                  zIndex: 100,
+                }}
+              >
                 <SvgIcon icon={PencilIcon} height={"25"} width={"25"} />
               </Grid>
             </Grid>
             <Grid display={"flex"} gap={3}>
               {todo && (
                 <Grid
+                  data-cy="todo-sort-button"
                   sx={{
                     cursor: "pointer",
                     border: "solid 1px",
@@ -106,6 +125,7 @@ export default function Titlebar(props: TitlebarProps) {
                 </Grid>
               )}
               <RoundedButton
+                data-cy="todo-add-button"
                 roundedButtonProps={{
                   height: 54,
                   width: 159,
@@ -122,6 +142,7 @@ export default function Titlebar(props: TitlebarProps) {
               Activity
             </Typography>
             <RoundedButton
+              data-cy="activity-add-button"
               roundedButtonProps={{
                 height: 54,
                 width: 159,

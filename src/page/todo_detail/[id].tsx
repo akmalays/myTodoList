@@ -70,7 +70,6 @@ export default function TodoDetail() {
   };
   const handleOpenAddList = () => {
     setOpenAddList(true);
-    setActivityId(id);
   };
   const handleOpenEditList = async (todoId: number) => {
     setOpenAddList(true);
@@ -149,6 +148,7 @@ export default function TodoDetail() {
   useEffect(() => {
     if (id) {
       getAllTodoItems(id);
+      setActivityId(id);
     }
   }, [id]);
 
@@ -157,6 +157,8 @@ export default function TodoDetail() {
     getAllTodoItems(id as string);
     setOpenDelete(false);
   };
+
+  console.log(id, "id");
 
   return (
     <div>
@@ -236,6 +238,7 @@ export default function TodoDetail() {
             })
           ) : (
             <Grid
+              data-cy="todo-empty-state"
               sx={{
                 display: "flex",
                 justifyContent: "center",
