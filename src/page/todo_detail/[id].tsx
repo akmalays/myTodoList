@@ -318,7 +318,6 @@ export default function TodoDetail() {
         getAllTodoItems={() => getAllTodoItems(id as string)}
         activityId={activityId as string}
         setOpenAddList={setOpenAddList}
-        clickedId={clickedId as number}
         todoItemById={todoItemById as IGetTodo}
       />
       {/* alert */}
