@@ -35,6 +35,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
           }}
         >
           <Icon
+            data-cy="modal-delete-icon"
             icon="tabler:alert-triangle"
             width={84}
             height={84}
@@ -48,7 +49,10 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
           alignItems="center"
           pt={5}
         >
-          <Typography sx={{ maxWidth: 365, textAlign: "center", fontSize: 18 }}>
+          <Typography
+            data-cy="modal-delete-title"
+            sx={{ maxWidth: 365, textAlign: "center", fontSize: 18 }}
+          >
             Apakah anda yakin menghapus activity <strong> " {title} "</strong> ?
           </Typography>
         </Grid>
@@ -62,6 +66,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
           }}
         >
           <RoundedButton
+            data-cy="modal-delete-cancel-button"
             roundedButtonProps={{
               height: 54,
               width: 150,
@@ -74,6 +79,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
             }}
           />
           <RoundedButton
+            data-cy="modal-delete-confirm-button"
             roundedButtonProps={{
               height: 54,
               width: 150,

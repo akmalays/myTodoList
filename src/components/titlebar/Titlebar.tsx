@@ -138,7 +138,10 @@ export default function Titlebar(props: TitlebarProps) {
           </>
         ) : (
           <>
-            <Typography sx={{ fontWeight: "bold", fontSize: 36 }}>
+            <Typography
+              sx={{ fontWeight: "bold", fontSize: 36 }}
+              data-cy="activity-title"
+            >
               Activity
             </Typography>
             <RoundedButton

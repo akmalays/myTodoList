@@ -94,6 +94,7 @@ export default function MainPage() {
                   key={todo.id}
                 >
                   <Grid
+                    data-cy="activity-item"
                     p={3}
                     sx={{
                       display: "flex",
@@ -124,6 +125,7 @@ export default function MainPage() {
                     </Tooltip>
                     <Grid display="flex" justifyContent={"space-between"}>
                       <Typography
+                        data-cy="activity-item-date"
                         sx={{
                           fontWeight: "500",
                           fontSize: 14,
@@ -135,6 +137,7 @@ export default function MainPage() {
                       </Typography>
                       <Tooltip title="delete activity" arrow placement="top">
                         <Grid
+                          data-cy="activity-item-delete-button"
                           sx={{ cursor: "pointer" }}
                           onClick={() => isOpenModalDelete(todo.id, todo.title)}
                         >
@@ -152,6 +155,7 @@ export default function MainPage() {
             })
           ) : (
             <Grid
+              data-cy="activity-empty-state"
               sx={{
                 display: "flex",
                 justifyContent: "center",
