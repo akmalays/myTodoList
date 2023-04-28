@@ -23,6 +23,7 @@ import trashIcon from "../../assets/icons/todo-item-delete-button.svg";
 import PencilIcon from "../../assets/icons/todo-title-edit-button.svg";
 import NoTodoImages from "../../assets/images/todo-empty-state.svg";
 import AddItemModal from "../../components/add_item_modal/AddItemModal";
+import AlertSnackbar from "../../components/alert_snackbar/AlertSnackbar";
 import ColoredDot from "../../components/colored_dot/ColoredDot";
 import ConfirmationModal from "../../components/confirmation_modal/ConfirmationModal";
 import SvgIcon from "../../components/icon/Icon";
@@ -47,9 +48,7 @@ export default function TodoDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddList, setOpenAddList] = useState<boolean>(false);
-  const [clickedIndex, setClickedIndex] = useState<{ [key: number]: boolean }>(
-    {}
-  );
+
   const { id } = useParams();
   const open = Boolean(anchorEl);
 
@@ -87,44 +86,57 @@ export default function TodoDetail() {
   const onClose = () => {
     setAnchorEl(null);
   };
-  const sortOlder = (index: number) => {
+  const sortOlder = async (todoItem: IGetTodo[]) => {
+    const todoSorted = await todoItem.sort((a, b) => a.id - b.id);
+    setTodoItem(todoSorted);
     setAnchorEl(null);
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
   };
-  const sortNewest = (index: number) => {
+  const sortNewest = (todoItem: IGetTodo[]) => {
+    const todoSorted = todoItem.sort((b, a) => a.id - b.id);
+    setTodoItem(todoSorted);
     setAnchorEl(null);
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
   };
-  const sortAZ = (index: number) => {
+  const sortAZ = (todoItem: IGetTodo[]) => {
+    const todoSorted = todoItem.sort((a, b) => {
+      if (a.title > b.title) {
+        return -1;
+      } else if (a.title < b.title) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    setTodoItem(todoSorted);
     setAnchorEl(null);
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
   };
-  const sortZA = (index: number) => {
+  const sortZA = (todoItem: IGetTodo[]) => {
+    const todoSorted = todoItem.sort((a, b) => {
+      if (a.title < b.title) {
+        return -1;
+      } else if (a.title > b.title) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    setTodoItem(todoSorted);
     setAnchorEl(null);
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
   };
-  const sortUndone = (index: number) => {
+  const sortUndone = (todoItem: IGetTodo[]) => {
+    const filteredData = todoItem.filter((item) => item.is_active === 0);
+    const sortedData = todoItem.filter((item) => item.is_active === 1);
+    const todoSorted = [...sortedData, ...filteredData];
+    setTodoItem(todoSorted);
     setAnchorEl(null);
-    setClickedIndex((state) => ({
-      ...state,
-      [index]: !state[index],
-    }));
   };
 
   const filterData = [
-    { id: 1, name: "Terbaru", icon: TerbaruIcon, onClickFunc: sortNewest },
+    {
+      id: 1,
+      name: "Terbaru",
+      icon: TerbaruIcon,
+      onClickFunc: sortNewest,
+    },
     { id: 2, name: "Terlama", icon: TerlamaIcon, onClickFunc: sortOlder },
     { id: 3, name: "A - Z", icon: AzIcon, onClickFunc: sortZA },
     { id: 4, name: "Z - A", icon: ZaIcon, onClickFunc: sortAZ },
@@ -157,8 +169,6 @@ export default function TodoDetail() {
     getAllTodoItems(id as string);
     setOpenDelete(false);
   };
-
-  console.log(id, "id");
 
   return (
     <div>
@@ -267,11 +277,11 @@ export default function TodoDetail() {
         TransitionComponent={Fade}
         sx={{ "& .MuiPaper-root": { minWidth: 235 } }}
       >
-        {filterData.map((filter, index) => {
+        {filterData.map((filter: any) => {
           return (
             <div>
               <MenuItem
-                onClick={() => filter.onClickFunc(index)}
+                onClick={() => filter.onClickFunc(todoItem)}
                 sx={{ display: "flex", justifyContent: "space-between" }}
                 key={filter.id}
               >
@@ -285,11 +295,11 @@ export default function TodoDetail() {
                   </ListItemIcon>
                   {filter.name}
                 </Grid>
-                {clickedIndex[index] ? (
+                {/* {clickedIndex[index] ? (
                   <ListItemIcon>
                     <SvgIcon icon={selectedIcon} height={"20"} width={"20"} />
                   </ListItemIcon>
-                ) : null}
+                ) : null} */}
               </MenuItem>
               <Divider />
             </div>
@@ -311,6 +321,8 @@ export default function TodoDetail() {
         clickedId={clickedId as number}
         todoItemById={todoItemById as IGetTodo}
       />
+      {/* alert */}
+      <AlertSnackbar caption={"berhasil hapus task!"} isActive={false} />
     </div>
   );
 }
