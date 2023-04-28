@@ -14,6 +14,7 @@ export default function Navbar() {
           }}
         >
           <Typography
+            data-cy="header-title"
             sx={{
               fontWeight: "bold",
               fontSize: 24,
