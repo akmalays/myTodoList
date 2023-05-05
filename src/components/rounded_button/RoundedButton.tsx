@@ -6,6 +6,7 @@ import SvgIcon from "../icon/Icon";
 
 interface RoundedButtonProps {
   roundedButtonProps: {
+    dataProps?: string;
     type?: string;
     isDisabled?: boolean;
     width: number;
@@ -45,6 +46,7 @@ export default function RoundedButton(props: RoundedButtonProps) {
     <div>
       {roundedButtonProps.type === "no icon" ? (
         <Button
+          data-cy={roundedButtonProps.dataProps}
           sx={styles.button}
           onClick={roundedButtonProps.onClick}
           disabled={roundedButtonProps.isDisabled}
@@ -63,7 +65,11 @@ export default function RoundedButton(props: RoundedButtonProps) {
           </Grid>
         </Button>
       ) : (
-        <Button sx={styles.button} onClick={roundedButtonProps.onClick}>
+        <Button
+          sx={styles.button}
+          onClick={roundedButtonProps.onClick}
+          data-cy={roundedButtonProps.dataProps}
+        >
           <Grid sx={{ display: "flex", gap: 1 }}>
             <SvgIcon icon={plusIcon} width={"20px"} height={"20px"} pb={1} />
             <Typography

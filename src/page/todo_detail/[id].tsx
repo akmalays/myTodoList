@@ -86,11 +86,26 @@ export default function TodoDetail() {
   const onClose = () => {
     setAnchorEl(null);
   };
+
+  const changeActiveState = (idFilter: any) => {
+    let initialFilterData: any = filterData;
+    for (const i in initialFilterData) {
+      let { filterId, is_active } = initialFilterData[i];
+      if (filterId === idFilter) {
+        is_active = true;
+      } else {
+        is_active = false;
+      }
+    }
+  };
+
   const sortOlder = async (todoItem: IGetTodo[]) => {
     const todoSorted = await todoItem.sort((a, b) => a.id - b.id);
     setTodoItem(todoSorted);
     setAnchorEl(null);
+    changeActiveState("oldest");
   };
+
   const sortNewest = (todoItem: IGetTodo[]) => {
     const todoSorted = todoItem.sort((b, a) => a.id - b.id);
     setTodoItem(todoSorted);
@@ -130,23 +145,50 @@ export default function TodoDetail() {
     setAnchorEl(null);
   };
 
-  const filterData = [
+  let filterData = [
     {
       id: 1,
       name: "Terbaru",
+      filterId: "newest",
       icon: TerbaruIcon,
       onClickFunc: sortNewest,
+      is_actve: false,
     },
-    { id: 2, name: "Terlama", icon: TerlamaIcon, onClickFunc: sortOlder },
-    { id: 3, name: "A - Z", icon: AzIcon, onClickFunc: sortZA },
-    { id: 4, name: "Z - A", icon: ZaIcon, onClickFunc: sortAZ },
+    {
+      id: 2,
+      name: "Terlama",
+      filterId: "oldest",
+      icon: TerlamaIcon,
+      onClickFunc: sortOlder,
+      is_actve: false,
+    },
+    {
+      id: 3,
+      name: "A - Z",
+      filterId: "ascending",
+      icon: AzIcon,
+      onClickFunc: sortZA,
+      is_actve: false,
+    },
+    {
+      id: 4,
+      name: "Z - A",
+      filterId: "descending",
+      icon: ZaIcon,
+      onClickFunc: sortAZ,
+      is_actve: false,
+    },
     {
       id: 5,
       name: "Belum Selesai",
+      filterId: "notdone",
       icon: UndoneIcon,
       onClickFunc: sortUndone,
+      is_actve: false,
     },
   ];
+
+  console.log("cekk filter data", filterData);
 
   const getAllTodoItems = async (id: string) => {
     try {

@@ -125,8 +125,8 @@ export default function Titlebar(props: TitlebarProps) {
                 </Grid>
               )}
               <RoundedButton
-                data-cy="todo-add-button"
                 roundedButtonProps={{
+                  dataProps: "todo-add-button",
                   height: 54,
                   width: 159,
                   title: "Tambah",
@@ -145,8 +145,8 @@ export default function Titlebar(props: TitlebarProps) {
               Activity
             </Typography>
             <RoundedButton
-              data-cy="activity-add-button"
               roundedButtonProps={{
+                dataProps: "activity-add-button",
                 height: 54,
                 width: 159,
                 title: "Tambah",

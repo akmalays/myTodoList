@@ -15,6 +15,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
   return (
     <div>
       <Dialog
+        data-cy="todo-modal-delete"
         open={open}
         onClose={closeModal}
         aria-labelledby="alert-dialog-title"
@@ -66,8 +67,8 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
           }}
         >
           <RoundedButton
-            data-cy="modal-delete-cancel-button"
             roundedButtonProps={{
+              dataProps: "modal-delete-cancel-button",
               height: 54,
               width: 150,
               type: "no icon",
@@ -79,8 +80,8 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
             }}
           />
           <RoundedButton
-            data-cy="modal-delete-confirm-button"
             roundedButtonProps={{
+              dataProps: "modal-delete-confirm-button",
               height: 54,
               width: 150,
               type: "no icon",
