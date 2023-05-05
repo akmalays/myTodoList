@@ -23,7 +23,6 @@ interface AddItemModalProps {
   activityId: string;
   getAllTodoItems: any;
   setOpenAddList: (active: boolean) => void;
-  clickedId?: number;
   todoItemById?: IGetTodo;
 }
 
@@ -214,7 +213,7 @@ export default function AddItemModal(props: AddItemModalProps) {
                   ? undefined
                   : false
                 : true,
-              onClick: activityId ? addNewTodos : editTodosValue,
+              onClick: todoItemById === null ? addNewTodos : editTodosValue,
             }}
           />
         </Grid>
